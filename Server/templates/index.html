@@ -1,36 +1,27 @@
 {% extends 'base.html'  %}
 
 {% block head %}
-<title>Task Master</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <h1>some title</h1>
+</head>
 {% endblock %}
 
 {% block body %}
-<div class="content">
-    <h1>Task Master</h1>
-
-    <table>
-        <tr>
-            <th>Task</th>
-            <th>Added</th>
-            <th>Actions</th>
-        </tr>
-        {% for task in tasks %}
-        <tr>
-            <td>{{task.content}}</td>
-            <td>{{task.date_created.date()}}</td>
-            <td>
-                <a href="/delete/{{task.id}}">Delete</a>
-                <br>
-                <a href="">Update</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <form action="/" method="post">
-        <input type="text" name="content" id="content">
-        <input type="submit" value="Add Task">
+<div>
+    <form method="post" action="">
+        <label>Create New Experiment</label>
+        <br>
+        <input type="text" name="experiment_name" required="required">
+        <button type="submit" name="action" value="create_experiment">Create Experiment</button>
     </form>
-
+    <br>
+    <form method="post" action="">
+        <label>Participate In Existing Experiment</label>
+        <br>
+        <input type="text" name="experiment_id" required="required">
+        <button type="submit" name="action" value="join_experiment">Join Experiment</button>
+    </form>
 </div>
 {% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html'  %}
+
+{% block head %}
+<title>Title</title>
+<h1>Experiment Name:{{name}}</h1>
+<h1>Experiment Id:{{id}}</h1>
+<script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.0/lib/bundle.min.js"></script>
+{% endblock %}
+
+{% block body %}
+<input type="file" accept=".txt" id="file-input">
+<script type="text/javascript">
+    let fileInput = document.getElementById('file-input')
+    fileInput.onchange = async () => {
+        const file = fileInput.files[0];
+        dfd.readCSV(file).then((df) => {
+            let time = df.sortValues("time")["time"].unique();
+            let groups = df["group"].unique();
+            let O_a = 0;
+            let O_b = 0;
+            let E_a = 0;
+            let E_b = 0;
+            let V_a = 0;
+            let V_b = 0;
+            for (let value of time.values) {
+                let subjects_at_risk = df.query(df["time"].ge(value)).values.length;
+                let num_of_failures = df.query(df["time"].eq(value).and(df["Died"].eq(1))).values.length;
+                for (let group of groups.values) {
+                    let group_subjects_at_risk = df.query(df["time"].ge(value).and(df["group"].eq(group))).values.length;
+                    let num_of_failures_in_group = df.query(df["time"].eq(value).and(df["Died"].eq(1)).and(df["group"].eq(group))).values.length;
+                    let e = (group_subjects_at_risk / subjects_at_risk) * num_of_failures;
+                    let v;
+                    if (subjects_at_risk === 1) {
+                        v = 0;
+                    } else {
+                        v = e * ((subjects_at_risk - num_of_failures) / subjects_at_risk) * (
+                            (subjects_at_risk - group_subjects_at_risk) / (subjects_at_risk - 1));
+                    }
+                    let o = num_of_failures_in_group;
+                    if (group === 1) {
+                        O_a += o;
+                        E_a += e;
+                        V_a += v;
+                    } else {
+                        O_b += o;
+                        E_b += e;
+                        V_b += v;
+                    }
+                }
+            }
+            let num = 100;
+            let m1 = num * (O_a - E_a);
+            let m2 = num * V_a;
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", '/submit-results');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({message1: m1, message2: m2}));
+            alert("Date was sent to the server");
+            document.location.href = "/";
+        })
+
+    }
+</script>
+
+{% endblock %}
