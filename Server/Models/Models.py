@@ -1,6 +1,6 @@
 import uuid
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import DateTime, func
 
 db = SQLAlchemy()
 
@@ -10,11 +10,12 @@ class Message(db.Model):
     param_1 = db.Column(db.String(200), nullable=False)
     param_2 = db.Column(db.String(200), nullable=False)
     experiment = db.relationship('Experiment', backref=db.backref('messages', lazy=True))
-    experiment_id = db.Column(UUID(as_uuid=True), db.ForeignKey('experiment.id'), nullable=False)
+    experiment_id = db.Column(db.Text(length=36), db.ForeignKey('experiment.id'), nullable=False)
 
 
 class Experiment(db.Model):
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = db.Column(db.Text(length=36), default=lambda: str(uuid.uuid4()), primary_key=True)
+    timestamp = db.Column(DateTime(timezone=True), server_default=func.now())
     name = db.Column(db.String(200), nullable=False)
 
 

@@ -52,11 +52,16 @@
             let m1 = num * (O_a - E_a);
             let m2 = num * V_a;
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", '/submit-results');
+            xhr.open("POST", '/submit-results', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify({message1: m1, message2: m2}));
-            alert("Date was sent to the server");
-            document.location.href = "/";
+            // alert("Date was sent to the server");
+            // document.location.href = "/";
+            xhr.onreadystatechange = async () => {
+                document.location = xhr.responseURL;
+                // console.log(xhr.responseURL)
+
+            }
         })
 
     }

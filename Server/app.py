@@ -1,11 +1,16 @@
 import secrets
-from flask import Flask, render_template, request, abort,session,url_for
+import threading
+
+from flask import Flask, render_template, request, abort, session, url_for, redirect
 from Models.Models import *
+from sqlalchemy.dialects.postgresql import UUID
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.secret_key = secrets.token_bytes(32)
+db.app = app
 db.init_app(app)
+db.create_all()
 
 
 def is_valid_uuid(uuid_to_test):
@@ -15,13 +20,20 @@ def is_valid_uuid(uuid_to_test):
         return False
     return uuid_obj.as_uuid == uuid_to_test
 
+# def execute_experiment(experiment:Experiment)->None:
+#     creation_date = experiment.timestamp
+#     execution_date = threading.Timer()
 
-@app.route('/submit-results',methods=['POST'])
+
+@app.route('/submit-results', methods=['POST'])
 def submit_results():
     try:
+        data_dict = eval(request.data.decode())
         experiment_id = session["eid"]
-        print(request.data)
-        return render_template('index.html')
+        experiment = Experiment.query.filter_by(id=experiment_id).first()
+        message = Message(experiment=experiment,param_1=data_dict['message1'],param_2=data_dict['message2'])
+        add_message(message)
+        return redirect("/")
     except Exception as e:
         print(e)
         abort(400)
@@ -46,7 +58,7 @@ def index():
                 ex = Experiment(name=request.form['experiment_name'])
                 add_experiment(ex)
                 session["eid"] = ex.id
-                return render_template('experiment.html',name=ex.name,id=ex.id)
+                return render_template('experiment.html', name=ex.name, id=ex.id)
         return render_template('index.html')
     except Exception as e:
         print(e)
@@ -55,3 +67,4 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    db.create_all()
