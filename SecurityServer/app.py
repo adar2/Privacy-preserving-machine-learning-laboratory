@@ -4,7 +4,7 @@ from flask import Flask, request, abort
 
 from EncryptionModule import decrypt
 from Models.Models import *
-from SecurityServer.Utils import bytes_to_string
+from Common.Utils import bytes_to_string, deserialize
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///security.db'
@@ -25,7 +25,7 @@ def create():
             public_key = get_public_key_by_experiment_id(uid)
             if public_key is None:
                 raise Exception('Could not find public key for the given UID')
-            response = {'public_key': bytes_to_string(public_key)}
+            response = {'public_key': public_key}
             return response
         except Exception as e:
             print(e)
@@ -41,7 +41,7 @@ def get_public_key():
             public_key = get_public_key_by_experiment_id(uid)
             if public_key is None:
                 raise Exception('Could not find public key for the given UID')
-            response = {'public_key': bytes_to_string(public_key)}
+            response = {'public_key': public_key}
             return response
         except Exception as e:
             print(e)
@@ -58,7 +58,7 @@ def data_decryption():
             private_key = get_private_key_by_experiment_id(uid)
             if private_key is None:
                 raise Exception('Could not find private key for the given UID')
-            private_key_object = pickle.loads(private_key)
+            private_key_object = deserialize(private_key)
             decrypted_data = decrypt(private_key_object, encrypted_data)
             return decrypted_data
         except Exception as e:

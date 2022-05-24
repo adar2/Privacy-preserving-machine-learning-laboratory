@@ -1,6 +1,6 @@
 import pickle
 import uuid
-from SecurityServer.Utils import is_valid_uuid
+from Common.Utils import is_valid_uuid, serialize
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime, func
 
@@ -27,8 +27,8 @@ def create_experiment(uid, name):
     if uid is None or name is None or not is_valid_uuid(uid):
         raise Exception('Invalid Arguments')
     public_key, private_key = generate_public_private_keys()
-    storable_public_key = pickle.dumps(public_key)
-    storable_private_key = pickle.dumps(private_key)
+    storable_public_key = serialize(public_key)
+    storable_private_key = serialize(private_key)
     new_experiment = Experiment(id=uid, name=name, public_key=storable_public_key, private_key=storable_private_key)
     add_experiment(new_experiment)
 
