@@ -3,9 +3,9 @@ from phe import paillier, PaillierPublicKey, PaillierPrivateKey
 KEY_SIZE = 2048
 
 
-def encrypt(public_key: PaillierPublicKey, cipher_text: str):
+def encrypt(public_key: PaillierPublicKey, plain_text: str):
     if public_key is not None:
-        return public_key.encrypt(cipher_text)
+        return public_key.encrypt(plain_text)
     return None
 
 

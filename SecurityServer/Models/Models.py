@@ -1,8 +1,9 @@
-import json
 import pickle
 import uuid
+from SecurityServer.Utils import is_valid_uuid
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime, func
+
 from SecurityServer.EncryptionModule import generate_public_private_keys
 
 db = SQLAlchemy()
@@ -23,7 +24,7 @@ def add_experiment(experiment: Experiment) -> None:
 
 
 def create_experiment(uid, name):
-    if uid is None or name is None:
+    if uid is None or name is None or not is_valid_uuid(uid):
         raise Exception('Invalid Arguments')
     public_key, private_key = generate_public_private_keys()
     storable_public_key = pickle.dumps(public_key)

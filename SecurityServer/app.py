@@ -1,10 +1,10 @@
-import base64
 import secrets
 
 from flask import Flask, request, abort
-from sqlalchemy.dialects.postgresql import UUID
+
 from EncryptionModule import decrypt
 from Models.Models import *
+from SecurityServer.Utils import bytes_to_string
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///security.db'
@@ -12,22 +12,6 @@ app.secret_key = secrets.token_bytes(32)
 db.app = app
 db.init_app(app)
 db.create_all()
-
-
-def is_valid_uuid(uuid_to_test):
-    try:
-        uuid_obj = UUID(uuid_to_test)
-    except ValueError:
-        return False
-    return uuid_obj.as_uuid == uuid_to_test
-
-
-def bytes_to_string(bytes: bytes) -> str:
-    return base64.encodebytes(bytes).decode()
-
-
-def string_to_bytes(string: str) -> bytes:
-    return base64.decodebytes(string.encode())
 
 
 @app.route('/create', methods=['POST'])
