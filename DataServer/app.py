@@ -6,7 +6,7 @@ from Models.Models import *
 from sqlalchemy.dialects.postgresql import UUID
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.secret_key = secrets.token_bytes(32)
 db.app = app
 db.init_app(app)
