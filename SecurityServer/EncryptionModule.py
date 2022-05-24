@@ -1,6 +1,6 @@
 from phe import paillier, PaillierPublicKey, PaillierPrivateKey
 
-KEY_SIZE = 2048
+from Common.Constants import KEY_SIZE
 
 
 def encrypt(public_key: PaillierPublicKey, plain_text: str):

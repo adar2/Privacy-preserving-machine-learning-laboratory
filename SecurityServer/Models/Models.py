@@ -1,13 +1,13 @@
-import pickle
 import uuid
-from Common.Utils import is_valid_uuid, serialize
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime, func
 
+from Common.Constants import KEY_SIZE
+from Common.Utils import is_valid_uuid, serialize
 from SecurityServer.EncryptionModule import generate_public_private_keys
 
 db = SQLAlchemy()
-KEY_SIZE = 2048
 
 
 class Experiment(db.Model):

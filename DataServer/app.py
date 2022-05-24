@@ -1,9 +1,9 @@
 import secrets
-import threading
 
-from flask import Flask, render_template, request, abort, session, url_for, redirect
+from flask import Flask, render_template, request, abort, session, redirect
+
+from Common.Utils import is_valid_uuid
 from Models.Models import *
-from sqlalchemy.dialects.postgresql import UUID
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
@@ -13,30 +13,31 @@ db.init_app(app)
 db.create_all()
 
 
-def is_valid_uuid(uuid_to_test):
-    try:
-        uuid_obj = UUID(uuid_to_test)
-    except ValueError:
-        return False
-    return uuid_obj.as_uuid == uuid_to_test
-
-# def execute_experiment(experiment:Experiment)->None:
-#     creation_date = experiment.timestamp
-#     execution_date = threading.Timer()
-
-
 @app.route('/submit-results', methods=['POST'])
 def submit_results():
     try:
-        data_dict = eval(request.data.decode())
-        experiment_id = session["eid"]
-        experiment = Experiment.query.filter_by(id=experiment_id).first()
-        message = Message(experiment=experiment,param_1=data_dict['message1'],param_2=data_dict['message2'])
-        add_message(message)
         return redirect("/")
     except Exception as e:
         print(e)
         abort(400)
+
+
+@app.route('/create', methods=['POST'])
+def create():
+    if request.data:
+        try:
+            data = request.json
+            uid = data['uid']
+            name = data['name']
+            create_experiment(uid, name)
+            public_key = get_public_key_by_experiment_id(uid)
+            if public_key is None:
+                raise Exception('Could not find public key for the given UID')
+            response = {'public_key': public_key}
+            return response
+        except Exception as e:
+            print(e)
+    return abort(400)
 
 
 @app.route('/', methods=['POST', 'GET'])
