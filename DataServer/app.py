@@ -52,14 +52,14 @@ def index():
                     return 'id is not valid'
                 ex = Experiment.query.filter_by(id=uid).first()
                 if ex is not None:
-                    return render_template('experiment.html', name=ex.name, id=ex.id)
+                    return render_template('templates/experiment.html', name=ex.name, id=ex.id)
                 return "Id doesn't exists"
             if action == 'create_experiment':
                 ex = Experiment(name=request.form['experiment_name'])
                 add_experiment(ex)
                 session["eid"] = ex.id
-                return render_template('experiment.html', name=ex.name, id=ex.id)
-        return render_template('index.html')
+                return render_template('templates/experiment.html', name=ex.name, id=ex.id)
+        return render_template('templates/index.html')
     except Exception as e:
         print(e)
         return 'There was an issue adding your task'
