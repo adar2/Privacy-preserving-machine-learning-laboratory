@@ -2,9 +2,9 @@ import secrets
 
 from flask import Flask, request, abort
 
-from EncryptionModule import decrypt
+from Common.Utils import deserialize
+from EncryptionModule import decrypt, encrypt
 from Models.Models import *
-from Common.Utils import bytes_to_string, deserialize
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///security.db'
@@ -48,24 +48,44 @@ def get_public_key():
     return abort(400)
 
 
+@app.route('/encrypt', methods=['GET'])
+def data_encryption():
+    if request.data:
+        try:
+            data = request.json
+            uid = data['uid']
+            plain_text_data = data['data']
+            public_key = get_public_key_by_experiment_id(uid)
+            if public_key is None:
+                raise Exception('Could not find public key for the given UID')
+            public_key_object = deserialize(public_key)
+            encrypted_data = encrypt(public_key_object, plain_text_data)
+            response = {'encrypted_data': serialize(encrypted_data)}
+            return response
+        except Exception as e:
+            print(e)
+    return abort(400)
+
+
 @app.route('/decrypt', methods=['GET'])
 def data_decryption():
     if request.data:
         try:
             data = request.json
             uid = data['uid']
-            encrypted_data = data['data']
+            encrypted_data = deserialize(data['data'])
             private_key = get_private_key_by_experiment_id(uid)
             if private_key is None:
                 raise Exception('Could not find private key for the given UID')
             private_key_object = deserialize(private_key)
             decrypted_data = decrypt(private_key_object, encrypted_data)
-            return decrypted_data
+            response = {'decrypted_data': decrypted_data}
+            return response
         except Exception as e:
             print(e)
     return abort(400)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=5051, debug=True, ssl_context='adhoc')
     db.create_all()

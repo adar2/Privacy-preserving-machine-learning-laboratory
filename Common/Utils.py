@@ -1,6 +1,6 @@
 import base64
 import pickle
-from uuid import UUID
+from uuid import UUID, uuid4
 
 
 def is_valid_uuid(uuid_to_test):
@@ -11,12 +11,16 @@ def is_valid_uuid(uuid_to_test):
     return str(uuid_obj) == uuid_to_test
 
 
-def bytes_to_string(bytes: bytes) -> str:
-    return base64.encodebytes(bytes).decode()
+def generate_uuid():
+    return str(uuid4())
 
 
-def string_to_bytes(string: str) -> bytes:
-    return base64.decodebytes(string.encode())
+def bytes_to_string(data: bytes) -> str:
+    return base64.encodebytes(data).decode()
+
+
+def string_to_bytes(data: str) -> bytes:
+    return base64.decodebytes(data.encode())
 
 
 def serialize(obj: object) -> str:
