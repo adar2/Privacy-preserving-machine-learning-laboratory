@@ -1,17 +1,15 @@
-import uuid
-
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime, func
 
 from Common.Constants import KEY_SIZE
-from Common.Utils import is_valid_uuid, serialize
+from Common.Utils import is_valid_uuid, serialize, generate_uuid
 from SecurityServer.EncryptionModule import generate_public_private_keys
 
 db = SQLAlchemy()
 
 
 class Experiment(db.Model):
-    id = db.Column(db.Text(length=36), default=lambda: str(uuid.uuid4()), primary_key=True)
+    id = db.Column(db.Text(length=36), default=generate_uuid, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     timestamp = db.Column(DateTime(timezone=True), server_default=func.now())
     public_key = db.Column(db.String(KEY_SIZE), nullable=False)

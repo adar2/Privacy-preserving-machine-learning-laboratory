@@ -1,6 +1,6 @@
 import base64
 import pickle
-from uuid import UUID
+from uuid import UUID, uuid4
 
 
 def is_valid_uuid(uuid_to_test):
@@ -9,6 +9,10 @@ def is_valid_uuid(uuid_to_test):
     except ValueError:
         return False
     return str(uuid_obj) == uuid_to_test
+
+
+def generate_uuid():
+    return str(uuid4())
 
 
 def bytes_to_string(bytes: bytes) -> str:

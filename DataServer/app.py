@@ -27,13 +27,10 @@ def create():
     if request.data:
         try:
             data = request.json
-            uid = data['uid']
             name = data['name']
-            create_experiment(uid, name)
-            public_key = get_public_key_by_experiment_id(uid)
-            if public_key is None:
-                raise Exception('Could not find public key for the given UID')
-            response = {'public_key': public_key}
+            experiment = create_experiment(name)
+            add_experiment(experiment)
+            response = {'uid': experiment.id, 'public_key': experiment.public_key}
             return response
         except Exception as e:
             print(e)
@@ -67,5 +64,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, ssl_context='adhoc')
     db.create_all()

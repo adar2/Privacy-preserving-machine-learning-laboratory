@@ -87,5 +87,5 @@ def data_decryption():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=5051, debug=True, ssl_context='adhoc')
     db.create_all()
