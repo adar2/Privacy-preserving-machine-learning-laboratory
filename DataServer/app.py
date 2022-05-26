@@ -22,10 +22,20 @@ def submit_results():
             m2 = data['m2']
             uid = data['uid']
             update_experiment_results(uid, m1, m2)
-            return redirect('/')
-            # add_experiment(experiment)
-            # response = {'uid': experiment.id, 'public_key': experiment.public_key}
-            # return response
+            return 'Success'
+        except Exception as e:
+            print(e)
+    return abort(DEFAULT_FAILURE_STATUS_CODE)
+
+
+@app.route('/getResults', methods=['GET'])
+def get_results():
+    if request.data:
+        try:
+            data = request.json
+            uid = data['uid']
+            decrypted_data = get_decrypted_data(uid)
+            return {'D': decrypted_data[0], 'U': decrypted_data[1]}
         except Exception as e:
             print(e)
     return abort(DEFAULT_FAILURE_STATUS_CODE)

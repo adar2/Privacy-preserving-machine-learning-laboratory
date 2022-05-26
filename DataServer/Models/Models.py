@@ -31,7 +31,7 @@ def get_default_encrypted_number(public_key):
     public_key_obj = deserialize(public_key)
     if not isinstance(public_key_obj, PaillierPublicKey):
         raise Exception('Invalid object type')
-    return EncryptedNumber(ciphertext=0, public_key=public_key_obj)
+    return public_key_obj.encrypt(0)
 
 
 def create_experiment(name) -> Experiment:
@@ -42,6 +42,17 @@ def create_experiment(name) -> Experiment:
     new_experiment.D_cumulative_sum = serialize(default_number)
     new_experiment.U_cumulative_sum = serialize(default_number)
     return new_experiment
+
+
+def get_decrypted_data(uid):
+    experiment = get_experiment_by_id(uid)
+    if experiment is None:
+        raise Exception(f'Could not find experiment with uid={uid}')
+    D = experiment.D_cumulative_sum
+    U = experiment.U_cumulative_sum
+    decrypted_D = client.decrypt(uid, D)
+    decrypted_U = client.decrypt(uid, U)
+    return decrypted_D, decrypted_U
 
 
 def update_experiment_results(uid, m1, m2) -> None:

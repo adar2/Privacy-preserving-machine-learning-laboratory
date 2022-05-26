@@ -1,11 +1,12 @@
 import pandas as pd
+from phe import PaillierPublicKey
 
 
 def get_df_from_file(file) -> pd.DataFrame:
-    return pd.read_csv(file, sep='\t')
+    return pd.read_csv(file)
 
 
-def run_ASY_protocol(file):
+def run_ASY_protocol(file, public_key: PaillierPublicKey):
     df = get_df_from_file(file)
     number_of_subjects = len(df)
     time_set = sorted(df['time'].unique())
@@ -38,7 +39,6 @@ def run_ASY_protocol(file):
                 E_b += e
                 V_b += v
 
-    num = 100
-    m1 = num * (O_a - E_a)
-    m2 = num * V_a
+    m1 = public_key.encrypt(O_a - E_a)
+    m2 = public_key.encrypt(V_a)
     return m1, m2

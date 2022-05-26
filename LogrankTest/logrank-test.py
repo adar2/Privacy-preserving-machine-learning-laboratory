@@ -64,15 +64,7 @@ class LogRankTest:
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('../Datasets/test-data.txt', sep='\t')
+    df = pd.read_csv('../Datasets/test-data.txt')
     l = LogRankTest(df)
     res = l.test()
     print(f'group A Z value :{res[0]}, group B Z value:{res[1]}, their sum {res[0] + res[1]}')
-    # print()
-    # T1 = list(df[df.group == 1].time)
-    # T2 = list(df[df.group == 2].time)
-    # E1 = list(df[df.group == 1].Died)
-    # E2 = list(df[df.group == 2].Died)
-    #
-    # results = logrank_test(T1, T2, event_observed_A=E1, event_observed_B=E2)
-    # results.ascii_print()
