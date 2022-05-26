@@ -1,17 +1,15 @@
 import json
-
 import requests
-
-import Client.Common
 import Client.Common as clientCommon
 from Common.Utils import serialize, deserialize
 
 
 class DataServerClient:
-    def __init__(self, url=Client.Common.DATA_SERVER_URL):
+    def __init__(self, url=clientCommon.DATA_SERVER_URL):
         self.url = url
         self.headers = {'Content-Type': 'application/json'}
-        self.paths = {'create': '/create', 'submit_results': '/submitResults', 'get_results': '/getResults'}
+        self.paths = {'create': '/create', 'submit_results': '/submitResults', 'get_results': '/getResults',
+                      'get_public_key': '/publicKey'}
 
     def new_experiment(self, experiment_name: ""):
         url = self.url + self.paths['create']
@@ -30,10 +28,18 @@ class DataServerClient:
             return clientCommon.FAILURE
         return clientCommon.SUCCESS
 
+    def get_public_key_from_uid(self, uid):
+        url = self.url + self.paths['get_public_key']
+        payload = json.dumps({"uid": uid})
+        response = requests.post(headers=self.headers, url=url, data=payload, verify=False)
+        if response.status_code != 200:
+            return clientCommon.FAILURE, None
+        return clientCommon.SUCCESS, response.json()['public_key']
+
     def get_results(self, uid):
         url = self.url + self.paths['get_results']
         payload = json.dumps({"uid": uid})
         response = requests.get(headers=self.headers, url=url, data=payload, verify=False)
         if response.status_code != 200:
-            return clientCommon.FAILURE
-        return response.json()  # returns {'D':value,'U':value}
+            return clientCommon.FAILURE, None
+        return clientCommon.SUCCESS, response.json()  # returns {'D':value,'U':value}
