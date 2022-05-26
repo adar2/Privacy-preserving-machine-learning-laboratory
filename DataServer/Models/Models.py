@@ -28,6 +28,6 @@ def get_experiment_by_id(uid) -> Experiment:
 
 def create_experiment(name) -> Experiment:
     new_experiment = Experiment(id=generate_uuid(), name=name)
-    public_key = client.get_public_key(name, new_experiment.id)
+    public_key = client.create(name, new_experiment.id)
     new_experiment.public_key = public_key
     return new_experiment

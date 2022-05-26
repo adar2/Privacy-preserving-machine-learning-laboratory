@@ -15,12 +15,12 @@ def generate_uuid():
     return str(uuid4())
 
 
-def bytes_to_string(bytes: bytes) -> str:
-    return base64.encodebytes(bytes).decode()
+def bytes_to_string(data: bytes) -> str:
+    return base64.encodebytes(data).decode()
 
 
-def string_to_bytes(string: str) -> bytes:
-    return base64.decodebytes(string.encode())
+def string_to_bytes(data: str) -> bytes:
+    return base64.decodebytes(data.encode())
 
 
 def serialize(obj: object) -> str:
