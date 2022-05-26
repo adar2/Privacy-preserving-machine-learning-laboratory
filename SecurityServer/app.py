@@ -5,9 +5,10 @@ from flask import Flask, request, abort
 from Common.Utils import deserialize
 from EncryptionModule import decrypt, encrypt
 from Models.Models import *
+from Common.Constants import DEFAULT_FAILURE_STATUS_CODE, SECURITY_SERVER_DB_CS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///security.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = SECURITY_SERVER_DB_CS
 app.secret_key = secrets.token_bytes(32)
 db.app = app
 db.init_app(app)
@@ -29,7 +30,7 @@ def create():
             return response
         except Exception as e:
             print(e)
-    return abort(400)
+    return abort(DEFAULT_FAILURE_STATUS_CODE)
 
 
 @app.route('/publicKey', methods=['GET'])
@@ -45,7 +46,7 @@ def get_public_key():
             return response
         except Exception as e:
             print(e)
-    return abort(400)
+    return abort(DEFAULT_FAILURE_STATUS_CODE)
 
 
 @app.route('/encrypt', methods=['GET'])
@@ -64,7 +65,7 @@ def data_encryption():
             return response
         except Exception as e:
             print(e)
-    return abort(400)
+    return abort(DEFAULT_FAILURE_STATUS_CODE)
 
 
 @app.route('/decrypt', methods=['GET'])
@@ -83,9 +84,8 @@ def data_decryption():
             return response
         except Exception as e:
             print(e)
-    return abort(400)
+    return abort(DEFAULT_FAILURE_STATUS_CODE)
 
 
 if __name__ == "__main__":
     app.run(port=5051, debug=True, ssl_context='adhoc')
-    db.create_all()
