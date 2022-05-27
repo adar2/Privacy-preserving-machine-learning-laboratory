@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Client/UI/UploadDataDialog.ui'
+# Form implementation generated from reading ui file 'UI/UploadDataDialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,6 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
+        Dialog.setWindowModality(QtCore.Qt.WindowModal)
         Dialog.resize(400, 300)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setGeometry(QtCore.QRect(30, 240, 341, 32))
@@ -50,7 +51,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Upload Data"))
         self.guid_label.setText(_translate("Dialog", "Experiment Guid: "))
         self.data_label.setText(_translate("Dialog", "Data:"))
         self.browse_button.setText(_translate("Dialog", "Browse..."))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Client/UI/NewExperimentDialog.ui'
+# Form implementation generated from reading ui file 'UI/NewExperimentDialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,6 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
+        Dialog.setWindowModality(QtCore.Qt.WindowModal)
         Dialog.resize(400, 300)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setGeometry(QtCore.QRect(30, 240, 341, 32))
@@ -21,7 +22,7 @@ class Ui_Dialog(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(80, 110, 101, 16))
+        self.label.setGeometry(QtCore.QRect(40, 110, 151, 16))
         self.label.setObjectName("label")
         self.experiment_name_textbox = QtWidgets.QTextEdit(Dialog)
         self.experiment_name_textbox.setGeometry(QtCore.QRect(190, 100, 104, 41))
@@ -34,5 +35,5 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Create New Experiment"))
         self.label.setText(_translate("Dialog", "Experiment Name:"))

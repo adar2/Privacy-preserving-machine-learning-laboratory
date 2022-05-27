@@ -1,3 +1,3 @@
- pyuic5 -o Client/NewExperimentDialog.py Client/UI/NewExperimentDialog.ui
- pyuic5 -o Client/UploadDataDialog.py Client/UI/UploadDataDialog.ui
- pyuic5 -o Client/MainWindow.py Client/UI/MainWindow.ui
+ pyuic5 -o NewExperimentDialog.py UI/NewExperimentDialog.ui
+ pyuic5 -o UploadDataDialog.py UI/UploadDataDialog.ui
+ pyuic5 -o MainWindow.py UI/MainWindow.ui

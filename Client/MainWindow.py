@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Client/UI/MainWindow.ui'
+# Form implementation generated from reading ui file 'UI/MainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -52,6 +52,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "ASY Experiment Tool"))
-        self.label.setText(_translate("MainWindow", "ASY protocol experiment toolasdas"))
+        self.label.setText(_translate("MainWindow", "ASY protocol experiment tool"))
         self.UploadDataButton.setText(_translate("MainWindow", "Upload data"))
         self.CreateExperimentButton.setText(_translate("MainWindow", "Create new experiment"))
