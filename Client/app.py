@@ -7,12 +7,14 @@ from ASY import run_ASY_protocol
 from Client.DataServerClient import DataServerClient
 from Client.Common import FAILURE
 
+
 def error_popup(title, text):
     msg = QMessageBox()
     msg.setIcon(QMessageBox.Critical)
     msg.setText(text)
     msg.setWindowTitle(title)
     msg.exec_()
+
 
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -46,8 +48,6 @@ class NewExperimentDialog(QDialog, NewExperimentDialogUI):
             self.data_server_client.new_experiment(name)
 
 
-
-
 class DataUploadDialog(QDialog, UploadDataDialogUI):
     def __init__(self, data_server_client: DataServerClient, parent=None):
         super().__init__(parent)
@@ -63,16 +63,16 @@ class DataUploadDialog(QDialog, UploadDataDialogUI):
             error_popup("GUID Error", "No GUID Entered!")
         public_key_response, public_key = self.data_server_client.get_public_key_from_uid(entered_guid)
         if public_key_response == FAILURE:
-            error_popup("Connection Error","Failed to connect to server!")
+            error_popup("Connection Error", "Failed to connect to server!")
         m1, m2 = run_ASY_protocol(self.file_full_path, public_key_response)
         results_response = self.data_server_client.submit_results(entered_guid, m1, m2)
         if results_response == FAILURE:
-            error_popup("Connection Error","Failed to connect to server!")
+            error_popup("Connection Error", "Failed to connect to server!")
 
     def browse_file(self):
         filedialog = QFileDialog()
         filedialog.setFileMode(QFileDialog.AnyFile)
-        #filedialog.setFilter("Text files (*.txt)")
+        # filedialog.setFilter("Text files (*.txt)")
         filedialog.setWindowTitle('Select Dataset')
         if filedialog.exec_() == QDialog.Accepted:
             self.file_full_path = str(filedialog.selectedFiles()[0])

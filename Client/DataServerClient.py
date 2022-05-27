@@ -5,7 +5,7 @@ from Common.Utils import serialize, deserialize
 
 
 class DataServerClient:
-    def __init__(self, url=clientCommon.DATA_SERVER_URL):
+    def __init__(self, url='https://127.0.0.1:5000'):
         self.url = url
         self.headers = {'Content-Type': 'application/json'}
         self.paths = {'create': '/create', 'submit_results': '/submitResults', 'get_results': '/getResults',

@@ -6,20 +6,20 @@ import pandas as pd
 class LogRankTest:
     def __init__(self, data: pd.DataFrame):
         self.df = data
-        self.number_of_subjects = len(df)
+        self.number_of_subjects = len(self.df)
 
     def __get_distinct_time(self):
         return sorted(self.df['time'].unique())
 
     def __get_subjects_at_risk(self, time, group=None):
         if group is None:
-            return len(self.df[df.time >= time])
-        return len(self.df[(df.time >= time) & (df.group == group)])
+            return len(self.df[self.df.time >= time])
+        return len(self.df[(self.df.time >= time) & (self.df.group == group)])
 
     def __get_number_of_failures(self, time, group=None):
         if group is None:
-            return len(self.df[(df.time == time) & (df.Died == 1)])
-        return len(self.df[(df.time == time) & (df.Died == 1) & (df.group == group)])
+            return len(self.df[(self.df.time == time) & (self.df.Died == 1)])
+        return len(self.df[(self.df.time == time) & (self.df.Died == 1) & (self.df.group == group)])
 
     @staticmethod
     def __expectation(num_of_subjects, num_of_subjects_in_group, num_of_failures):
