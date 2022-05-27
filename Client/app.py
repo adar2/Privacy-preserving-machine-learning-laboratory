@@ -1,19 +1,12 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
+from Client.GuiUtils import error_popup, info_popup, copy_to_clipboard
 from MainWindow import Ui_MainWindow
 from UploadDataDialog import Ui_Dialog as UploadDataDialogUI
 from NewExperimentDialog import Ui_Dialog as NewExperimentDialogUI
 from ASY import run_ASY_protocol
 from Client.DataServerClient import DataServerClient
 from Client.Common import FAILURE
-
-
-def error_popup(title, text):
-    msg = QMessageBox()
-    msg.setIcon(QMessageBox.Critical)
-    msg.setText(text)
-    msg.setWindowTitle(title)
-    msg.exec_()
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -44,8 +37,12 @@ class NewExperimentDialog(QDialog, NewExperimentDialogUI):
         name = self.experiment_name_textbox.toPlainText()
         if len(name) == 0:
             error_popup("Name Error", "No Name Entered!")
-        else:
-            self.data_server_client.new_experiment(name)
+        response, guid = self.data_server_client.new_experiment(name)
+        if not response:
+            error_popup("Connection Error", "Failed to connect to server!")
+        info_popup("Experiment created", "Experiment successfully created!\n\nThe GUID was copied to your clipboard.",
+                   f"Experiment name: {name}\nExperiment GUID: {guid}")
+        copy_to_clipboard(guid)
 
 
 class DataUploadDialog(QDialog, UploadDataDialogUI):
@@ -72,7 +69,7 @@ class DataUploadDialog(QDialog, UploadDataDialogUI):
     def browse_file(self):
         filedialog = QFileDialog()
         filedialog.setFileMode(QFileDialog.AnyFile)
-        # filedialog.setFilter("Text files (*.txt)")
+        filedialog.setNameFilter("Text files (*.txt)")
         filedialog.setWindowTitle('Select Dataset')
         if filedialog.exec_() == QDialog.Accepted:
             self.file_full_path = str(filedialog.selectedFiles()[0])

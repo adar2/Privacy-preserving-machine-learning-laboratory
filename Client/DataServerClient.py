@@ -18,7 +18,7 @@ class DataServerClient:
         if response.status_code != 200:
             return clientCommon.FAILURE, None, None
         response_json = response.json()
-        return clientCommon.SUCCESS, response_json["uid"], deserialize(response_json["public_key"])
+        return clientCommon.SUCCESS, response_json["uid"]
 
     def submit_results(self, uid, m1, m2):
         url = self.url + self.paths['submit_results']
@@ -34,7 +34,7 @@ class DataServerClient:
         response = requests.post(headers=self.headers, url=url, data=payload, verify=False)
         if response.status_code != 200:
             return clientCommon.FAILURE, None
-        return clientCommon.SUCCESS, response.json()['public_key']
+        return clientCommon.SUCCESS, deserialize(response.json()["public_key"])
 
     def get_results(self, uid):
         url = self.url + self.paths['get_results']
