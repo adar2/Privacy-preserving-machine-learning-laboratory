@@ -6,20 +6,20 @@ import pandas as pd
 class LogRankTest:
     def __init__(self, data: pd.DataFrame):
         self.df = data
-        self.number_of_subjects = len(df)
+        self.number_of_subjects = len(self.df)
 
     def __get_distinct_time(self):
         return sorted(self.df['time'].unique())
 
     def __get_subjects_at_risk(self, time, group=None):
         if group is None:
-            return len(self.df[df.time >= time])
-        return len(self.df[(df.time >= time) & (df.group == group)])
+            return len(self.df[self.df.time >= time])
+        return len(self.df[(self.df.time >= time) & (self.df.group == group)])
 
     def __get_number_of_failures(self, time, group=None):
         if group is None:
-            return len(self.df[(df.time == time) & (df.Died == 1)])
-        return len(self.df[(df.time == time) & (df.Died == 1) & (df.group == group)])
+            return len(self.df[(self.df.time == time) & (self.df.Died == 1)])
+        return len(self.df[(self.df.time == time) & (self.df.Died == 1) & (self.df.group == group)])
 
     @staticmethod
     def __expectation(num_of_subjects, num_of_subjects_in_group, num_of_failures):
@@ -64,15 +64,7 @@ class LogRankTest:
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('test-data.txt', sep='\t')
+    df = pd.read_csv('../Datasets/test-data.txt')
     l = LogRankTest(df)
     res = l.test()
     print(f'group A Z value :{res[0]}, group B Z value:{res[1]}, their sum {res[0] + res[1]}')
-    # print()
-    # T1 = list(df[df.group == 1].time)
-    # T2 = list(df[df.group == 2].time)
-    # E1 = list(df[df.group == 1].Died)
-    # E2 = list(df[df.group == 2].Died)
-    #
-    # results = logrank_test(T1, T2, event_observed_A=E1, event_observed_B=E2)
-    # results.ascii_print()

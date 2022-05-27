@@ -1,0 +1,4 @@
+DATA_SERVER_URL = ""
+SECURITY_SERVER_URL = ""
+SUCCESS = "Success"
+FAILURE = "Failure"

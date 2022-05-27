@@ -1,0 +1,4 @@
+KEY_SIZE = 2048
+DEFAULT_FAILURE_STATUS_CODE = 400
+DATA_SERVER_DB_CS = 'sqlite:///data.db'
+SECURITY_SERVER_DB_CS = 'sqlite:///security.db'
