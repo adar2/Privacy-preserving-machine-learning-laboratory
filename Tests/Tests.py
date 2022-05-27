@@ -49,7 +49,8 @@ if __name__ == '__main__':
                 clients.append(DataServerClient('https://127.0.0.1:5000'))
         # initialize experiment
         client = clients[0]
-        status, uid, public_key = client.new_experiment('ExperimentName')
+        status, uid = client.new_experiment('ExperimentName')
+        _, public_key = client.get_public_key_from_uid(uid)
         # make clients act simultaneously
         for client, file_path in zip(clients, client_files):
             client_thread = Thread(target=run_client, args=(client, file_path, public_key, uid))

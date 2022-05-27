@@ -61,7 +61,7 @@ class DataUploadDialog(QDialog, UploadDataDialogUI):
         public_key_response, public_key = self.data_server_client.get_public_key_from_uid(entered_guid)
         if public_key_response == FAILURE:
             error_popup("Connection Error", "Failed to connect to server!")
-        m1, m2 = run_ASY_protocol(self.file_full_path, public_key_response)
+        m1, m2 = run_ASY_protocol(self.file_full_path, public_key)
         results_response = self.data_server_client.submit_results(entered_guid, m1, m2)
         if results_response == FAILURE:
             error_popup("Connection Error", "Failed to connect to server!")

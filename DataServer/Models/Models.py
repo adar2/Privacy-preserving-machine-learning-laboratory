@@ -34,6 +34,10 @@ def get_default_encrypted_number(public_key):
     return public_key_obj.encrypt(0)
 
 
+def get_public_key_by_uid(uid):
+    return client.get_public_key(uid)
+
+
 def create_experiment(name) -> Experiment:
     new_experiment = Experiment(id=generate_uuid(), name=name)
     public_key = client.create(name, new_experiment.id)

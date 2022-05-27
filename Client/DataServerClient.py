@@ -31,7 +31,7 @@ class DataServerClient:
     def get_public_key_from_uid(self, uid):
         url = self.url + self.paths['get_public_key']
         payload = json.dumps({"uid": uid})
-        response = requests.post(headers=self.headers, url=url, data=payload, verify=False)
+        response = requests.get(headers=self.headers, url=url, data=payload, verify=False)
         if response.status_code != 200:
             return clientCommon.FAILURE, None
         return clientCommon.SUCCESS, deserialize(response.json()["public_key"])

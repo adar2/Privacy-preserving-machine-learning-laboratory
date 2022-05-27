@@ -56,5 +56,21 @@ def create():
     return abort(DEFAULT_FAILURE_STATUS_CODE)
 
 
+@app.route('/publicKey', methods=['GET'])
+def get_public_key():
+    if request.data:
+        try:
+            data = request.json
+            uid = data['uid']
+            public_key = get_public_key_by_uid(uid)
+            if public_key is None:
+                raise Exception('Could not find public key for the given UID')
+            response = {'public_key': public_key}
+            return response
+        except Exception as e:
+            print(e)
+    return abort(DEFAULT_FAILURE_STATUS_CODE)
+
+
 if __name__ == "__main__":
     app.run(debug=True, ssl_context='adhoc')
