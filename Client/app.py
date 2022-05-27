@@ -65,6 +65,7 @@ class DataUploadDialog(QDialog, UploadDataDialogUI):
         results_response = self.data_server_client.submit_results(entered_guid, m1, m2)
         if results_response == FAILURE:
             error_popup("Connection Error", "Failed to connect to server!")
+        info_popup("Data upload succeeded", f"Data successfully uploaded to experiment: {entered_guid}")
 
     def browse_file(self):
         filedialog = QFileDialog()
