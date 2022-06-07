@@ -61,10 +61,3 @@ class LogRankTest:
         Z_a = (O_a - E_a) / math.sqrt(V_a)
         Z_b = (O_b - E_b) / math.sqrt(V_b)
         return (Z_a, Z_b)
-
-
-if __name__ == '__main__':
-    df = pd.read_csv('../Datasets/test-data.txt')
-    l = LogRankTest(df)
-    res = l.test()
-    print(f'group A Z value :{res[0]}, group B Z value:{res[1]}, their sum {res[0] + res[1]}')
