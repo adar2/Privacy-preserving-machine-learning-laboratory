@@ -27,7 +27,7 @@ def run_client(client, file_path, public_key, uid):
 
 
 class ExperimentSimulator:
-    def __init__(self, file_name, number_of_parties=5, simulations_to_run=100,
+    def __init__(self, file_name="", number_of_parties=5, simulations_to_run=100,
                  data_server_url='https://127.0.0.1:5000'):
         self.file_name = ''
         self.number_of_parties = number_of_parties

@@ -14,6 +14,7 @@ from Client.UI.PyFiles.LocalAnalysisDialog import Ui_LocalAnalysisDialog
 from ASY import run_ASY_protocol
 from Client.DataServerClient import DataServerClient
 from Client.Infrastructure.Common import FAILURE
+from Tests.Simulator import ExperimentSimulator
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -108,7 +109,8 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
             z = LogrankTest.run_logrank_test(self.file_full_path)
             z_star = run_ASY_protocol()  # need to make a local version of it
         else:
-            raise NotImplementedError  # need to be able to access the auto versions
+            simulator = ExperimentSimulator(number_of_parties=num_of_parties, simulations_to_run=num_of_runs)
+            simulator.run_simulations()
 
 class ResultsViewDialog(QDialog,Ui_ResultsViewDialog):
     def __init__(self, data_server_client: DataServerClient, parent=None):
