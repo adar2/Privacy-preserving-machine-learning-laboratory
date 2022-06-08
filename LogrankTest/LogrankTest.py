@@ -4,8 +4,8 @@ import pandas as pd
 
 
 class LogRankTest:
-    def __init__(self, data: pd.DataFrame):
-        self.df = data
+    def __init__(self, dataset_file_path):
+        self.df = pd.read_csv(dataset_file_path)
         self.number_of_subjects = len(self.df)
 
     def __get_distinct_time(self):
@@ -63,8 +63,12 @@ class LogRankTest:
         return (Z_a, Z_b)
 
 
+def run_logrank_test(file_path: str):
+    logrank = LogRankTest('../Datasets/test-data.txt')
+    return logrank.test()
+
+
 if __name__ == '__main__':
-    df = pd.read_csv('../Datasets/test-data.txt')
-    l = LogRankTest(df)
+    l = LogRankTest('../Datasets/test-data.txt')
     res = l.test()
     print(f'group A Z value :{res[0]}, group B Z value:{res[1]}, their sum {res[0] + res[1]}')

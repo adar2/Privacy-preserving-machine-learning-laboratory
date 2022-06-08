@@ -37,9 +37,9 @@ class Ui_SimulationsDialog(object):
         self.label = QtWidgets.QLabel(SimulationsDialog)
         self.label.setGeometry(QtCore.QRect(50, 180, 91, 21))
         self.label.setObjectName("label")
-        self.BrowseButton = QtWidgets.QPushButton(SimulationsDialog)
-        self.BrowseButton.setGeometry(QtCore.QRect(140, 180, 161, 23))
-        self.BrowseButton.setObjectName("BrowseButton")
+        self.browse_button = QtWidgets.QPushButton(SimulationsDialog)
+        self.browse_button.setGeometry(QtCore.QRect(140, 180, 161, 23))
+        self.browse_button.setObjectName("browse_button")
 
         self.retranslateUi(SimulationsDialog)
         QtCore.QMetaObject.connectSlotsByName(SimulationsDialog)
@@ -52,4 +52,4 @@ class Ui_SimulationsDialog(object):
         self.run_simulations_button.setText(_translate("SimulationsDialog", "Run Simulations"))
         self.generate_dataset_checkbox.setText(_translate("SimulationsDialog", "Generate Synthetic Dataset"))
         self.label.setText(_translate("SimulationsDialog", "Dataset:"))
-        self.BrowseButton.setText(_translate("SimulationsDialog", "Browse..."))
+        self.browse_button.setText(_translate("SimulationsDialog", "Browse..."))

@@ -20,9 +20,9 @@ class Ui_LocalAnalysisDialog(object):
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.BrowseButton = QtWidgets.QPushButton(LocalAnalysisDialog)
-        self.BrowseButton.setGeometry(QtCore.QRect(110, 90, 161, 23))
-        self.BrowseButton.setObjectName("BrowseButton")
+        self.browse_button = QtWidgets.QPushButton(LocalAnalysisDialog)
+        self.browse_button.setGeometry(QtCore.QRect(110, 90, 161, 23))
+        self.browse_button.setObjectName("browse_button")
         self.label = QtWidgets.QLabel(LocalAnalysisDialog)
         self.label.setGeometry(QtCore.QRect(30, 90, 111, 16))
         self.label.setObjectName("label")
@@ -38,6 +38,6 @@ class Ui_LocalAnalysisDialog(object):
     def retranslateUi(self, LocalAnalysisDialog):
         _translate = QtCore.QCoreApplication.translate
         LocalAnalysisDialog.setWindowTitle(_translate("LocalAnalysisDialog", "Local Analysis"))
-        self.BrowseButton.setText(_translate("LocalAnalysisDialog", "Browse..."))
+        self.browse_button.setText(_translate("LocalAnalysisDialog", "Browse..."))
         self.label.setText(_translate("LocalAnalysisDialog", "Dataset File"))
         self.analyze_button.setText(_translate("LocalAnalysisDialog", "Analyze"))

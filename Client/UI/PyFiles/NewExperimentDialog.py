@@ -11,29 +11,29 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.setWindowModality(QtCore.Qt.WindowModal)
-        Dialog.resize(400, 300)
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
+class Ui_NewExperimentDialog(object):
+    def setupUi(self, NewExperimentDialog):
+        NewExperimentDialog.setObjectName("NewExperimentDialog")
+        NewExperimentDialog.setWindowModality(QtCore.Qt.WindowModal)
+        NewExperimentDialog.resize(400, 300)
+        self.buttonBox = QtWidgets.QDialogButtonBox(NewExperimentDialog)
         self.buttonBox.setGeometry(QtCore.QRect(30, 240, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.label = QtWidgets.QLabel(Dialog)
+        self.label = QtWidgets.QLabel(NewExperimentDialog)
         self.label.setGeometry(QtCore.QRect(40, 110, 151, 16))
         self.label.setObjectName("label")
-        self.experiment_name_textbox = QtWidgets.QTextEdit(Dialog)
+        self.experiment_name_textbox = QtWidgets.QTextEdit(NewExperimentDialog)
         self.experiment_name_textbox.setGeometry(QtCore.QRect(190, 100, 104, 41))
         self.experiment_name_textbox.setObjectName("experiment_name_textbox")
 
-        self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(NewExperimentDialog)
+        self.buttonBox.accepted.connect(NewExperimentDialog.accept)
+        self.buttonBox.rejected.connect(NewExperimentDialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(NewExperimentDialog)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, NewExperimentDialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Create New Experiment"))
-        self.label.setText(_translate("Dialog", "Experiment Name:"))
+        NewExperimentDialog.setWindowTitle(_translate("NewExperimentDialog", "Create New Experiment"))
+        self.label.setText(_translate("NewExperimentDialog", "Experiment Name:"))

@@ -101,7 +101,7 @@
     <string>Dataset:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="BrowseButton">
+  <widget class="QPushButton" name="browse_button">
    <property name="geometry">
     <rect>
      <x>140</x>
