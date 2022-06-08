@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'UI/MainWindow.ui'
+# Form implementation generated from reading ui file 'UI/UiFiles/MainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -29,7 +29,7 @@ class Ui_MainWindow(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.UploadDataButton = QtWidgets.QPushButton(self.centralwidget)
-        self.UploadDataButton.setGeometry(QtCore.QRect(60, 180, 131, 81))
+        self.UploadDataButton.setGeometry(QtCore.QRect(70, 130, 131, 81))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(10)
@@ -37,13 +37,37 @@ class Ui_MainWindow(object):
         self.UploadDataButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.UploadDataButton.setObjectName("UploadDataButton")
         self.CreateExperimentButton = QtWidgets.QPushButton(self.centralwidget)
-        self.CreateExperimentButton.setGeometry(QtCore.QRect(400, 180, 241, 81))
+        self.CreateExperimentButton.setGeometry(QtCore.QRect(400, 130, 241, 81))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(10)
         self.CreateExperimentButton.setFont(font)
         self.CreateExperimentButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.CreateExperimentButton.setObjectName("CreateExperimentButton")
+        self.LocalAnalysisButton = QtWidgets.QPushButton(self.centralwidget)
+        self.LocalAnalysisButton.setGeometry(QtCore.QRect(70, 250, 131, 81))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(10)
+        self.LocalAnalysisButton.setFont(font)
+        self.LocalAnalysisButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.LocalAnalysisButton.setObjectName("LocalAnalysisButton")
+        self.ViewResultsButton = QtWidgets.QPushButton(self.centralwidget)
+        self.ViewResultsButton.setGeometry(QtCore.QRect(460, 250, 131, 81))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(10)
+        self.ViewResultsButton.setFont(font)
+        self.ViewResultsButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.ViewResultsButton.setObjectName("ViewResultsButton")
+        self.SimulationsButton = QtWidgets.QPushButton(self.centralwidget)
+        self.SimulationsButton.setGeometry(QtCore.QRect(270, 250, 131, 81))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(10)
+        self.SimulationsButton.setFont(font)
+        self.SimulationsButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.SimulationsButton.setObjectName("SimulationsButton")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -55,3 +79,6 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "ASY protocol experiment tool"))
         self.UploadDataButton.setText(_translate("MainWindow", "Upload data"))
         self.CreateExperimentButton.setText(_translate("MainWindow", "Create new experiment"))
+        self.LocalAnalysisButton.setText(_translate("MainWindow", "Local Analysis"))
+        self.ViewResultsButton.setText(_translate("MainWindow", "View Results"))
+        self.SimulationsButton.setText(_translate("MainWindow", "Simulations"))

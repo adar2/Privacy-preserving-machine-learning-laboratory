@@ -1,6 +1,6 @@
 import json
 import requests
-import Client.Common as clientCommon
+import Client.Infrastructure.Common as clientCommon
 from Common.Utils import serialize, deserialize
 
 

@@ -1,12 +1,26 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
-from Client.GuiUtils import error_popup, info_popup, copy_to_clipboard
-from MainWindow import Ui_MainWindow
-from UploadDataDialog import Ui_Dialog as UploadDataDialogUI
-from NewExperimentDialog import Ui_Dialog as NewExperimentDialogUI
+from Client.Infrastructure.GuiUtils import error_popup, info_popup, copy_to_clipboard
+from Client.UI.PyFiles.MainWindow import Ui_MainWindow
+from Client.UI.PyFiles.UploadDataDialog import Ui_Dialog as UploadDataDialogUI
+from Client.UI.PyFiles.NewExperimentDialog import Ui_Dialog as NewExperimentDialogUI
 from ASY import run_ASY_protocol
 from Client.DataServerClient import DataServerClient
-from Client.Common import FAILURE
+from Client.Infrastructure.Common import FAILURE
+
+
+class DialogWithBrowse():
+
+    def __init__(self) -> None:
+        self.file_full_path = None
+
+    def browse_file(self):
+        filedialog = QFileDialog()
+        filedialog.setFileMode(QFileDialog.AnyFile)
+        filedialog.setNameFilter("Text files (*.txt)")
+        filedialog.setWindowTitle('Select Dataset')
+        if filedialog.exec_() == QDialog.Accepted:
+            self.file_full_path = str(filedialog.selectedFiles()[0])
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -45,10 +59,9 @@ class NewExperimentDialog(QDialog, NewExperimentDialogUI):
         copy_to_clipboard(guid)
 
 
-class DataUploadDialog(QDialog, UploadDataDialogUI):
+class DataUploadDialog(QDialog, UploadDataDialogUI, DialogWithBrowse):
     def __init__(self, data_server_client: DataServerClient, parent=None):
         super().__init__(parent)
-        self.file_full_path = None
         self.setupUi(self)
         self.data_server_client = data_server_client
         self.browse_button.clicked.connect(self.browse_file)
@@ -66,14 +79,6 @@ class DataUploadDialog(QDialog, UploadDataDialogUI):
         if results_response == FAILURE:
             error_popup("Connection Error", "Failed to connect to server!")
         info_popup("Data upload succeeded", f"Data successfully uploaded to experiment: {entered_guid}")
-
-    def browse_file(self):
-        filedialog = QFileDialog()
-        filedialog.setFileMode(QFileDialog.AnyFile)
-        filedialog.setNameFilter("Text files (*.txt)")
-        filedialog.setWindowTitle('Select Dataset')
-        if filedialog.exec_() == QDialog.Accepted:
-            self.file_full_path = str(filedialog.selectedFiles()[0])
 
 
 if __name__ == "__main__":
