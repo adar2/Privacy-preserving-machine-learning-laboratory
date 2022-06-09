@@ -39,14 +39,13 @@ class ExperimentSimulator:
         for _ in range(self.simulations_to_run):
             z_star = self.__run_simulation()
             delta = z_star - original_z
-            print(f'z* = {z_star}, z = {original_z}')
-            print(f'difference between actual Z to Z*:{delta}')
             simulation_results.append(delta)
+        fig = plt.figure()
         plt.hist(simulation_results, alpha=0.5)
         plt.title(f'z* - z: data size={len(self.data)}, {self.number_of_parties} parties , original z={original_z}')
         plt.xlabel('z* - z')
         plt.ylabel('count')
-        plt.show()
+        return fig
 
     def __run_client(self, file_path, public_key):
         m1, m2 = run_ASY_protocol(file_path, public_key)
