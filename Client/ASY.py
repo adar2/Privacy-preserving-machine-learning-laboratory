@@ -8,7 +8,6 @@ def get_df_from_file(file) -> pd.DataFrame:
 
 def run_ASY_protocol(file, public_key: PaillierPublicKey):
     df = get_df_from_file(file)
-    number_of_subjects = len(df)
     time_set = sorted(df['time'].unique())
     groups = df["group"].unique()
     O_a = 0
