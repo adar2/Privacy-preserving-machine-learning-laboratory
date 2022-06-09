@@ -1,5 +1,7 @@
 import sys
 from PyQt5 import QtCore
+from matplotlib import pyplot as plt
+
 from LogrankTest import LogrankTest
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QWidget
 from Client.Infrastructure.GuiUtils import error_popup, info_popup, copy_to_clipboard, DialogWithBrowse
@@ -10,10 +12,12 @@ from Client.UI.PyFiles.SimulationsDialog import Ui_SimulationsDialog
 from Client.UI.PyFiles.ResultsViewDialog import Ui_ResultsViewDialog
 from ASY import run_ASY_protocol
 from Client.DataServerClient import DataServerClient
-from Client.Infrastructure.Common import FAILURE
 from Tests.Simulator import ExperimentSimulator
 from Infrastructure.Common import SUCCESS, FAILURE
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from math import sqrt
+from datetime import datetime
+from matplotlib.figure import Figure
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -92,6 +96,9 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
         self.browse_button.setEnabled(False)
         self.run_simulations_button.clicked.connect(self.run_simulations)
         self.generate_dataset_checkbox.stateChanged.connect(self.on_generate_checkbox_toggled)
+        self.figure = Figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.vert_layout.addWidget(self.canvas)
 
     def should_generate_data(self):
         return self.generate_dataset_checkbox.isChecked()
@@ -105,14 +112,32 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
     def run_simulations(self):
         num_of_parties = int(self.num_of_parties_textbox.toPlainText())
         num_of_runs = int(self.num_of_runs_textbox.toPlainText())
-        if not self.should_generate_data():
-            z = LogrankTest.run_logrank_test(self.file_full_path)
-            z_star = run_ASY_protocol()  # need to make a local version of it
+        simulator = ExperimentSimulator(number_of_parties=num_of_parties, simulations_to_run=num_of_runs)
+        # use local file
+        if self.should_generate_data():
+            generated_file_name = self.generate_data_file()
+            simulator.file_name = generated_file_name
         else:
-            simulator = ExperimentSimulator(number_of_parties=num_of_parties, simulations_to_run=num_of_runs)
-            simulator.run_simulations()
+            simulator.file_name = self.file_full_path
+        z_fig = LogrankTest.run_logrank_test(simulator.file_name)
+        z_star_fig = simulator.run_simulations()
+        self.draw_figure_on_canvas(z_fig)
+        self.draw_figure_on_canvas(z_star_fig)
 
-class ResultsViewDialog(QDialog,Ui_ResultsViewDialog):
+    def generate_data_file(self):
+        from Datasets.DataGenerator import DataGenerator
+        generated_file_name = f'GeneratedData.txt'
+        generator = DataGenerator()
+        generator.generate_data(generated_file_name)
+        return generated_file_name
+
+    def draw_figure_on_canvas(self, figure):
+        # self.figure.clear()
+        self.figure = figure
+        self.canvas.draw()
+
+
+class ResultsViewDialog(QDialog, Ui_ResultsViewDialog):
     def __init__(self, data_server_client: DataServerClient, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -134,7 +159,7 @@ class ResultsViewDialog(QDialog,Ui_ResultsViewDialog):
         u = results_json['U']
         d = results_json['D']
         z_star = d / sqrt(u)
-        info_popup("Experiment Results",f'Experiment Name: {name}\nCreated on: {date}\n Current Z*: {z_star}')
+        info_popup("Experiment Results", f'Experiment Name: {name}\nCreated on: {date}\n Current Z*: {z_star}')
 
 
 if __name__ == "__main__":

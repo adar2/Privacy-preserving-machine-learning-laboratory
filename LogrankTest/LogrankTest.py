@@ -83,8 +83,9 @@ class LogRankTest:
 
 
 def run_logrank_test(file_path: str):
-    logrank = LogRankTest('../Datasets/test-data.txt')
-    return logrank.test()
+    logrank = LogRankTest(file_path)
+    test_results = logrank.test()
+    return logrank.get_data_graph(f"Step function for LogRank test, Z={test_results[0]}")
 
 
 if __name__ == '__main__':

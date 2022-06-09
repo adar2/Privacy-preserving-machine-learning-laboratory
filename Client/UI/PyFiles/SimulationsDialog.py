@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_SimulationsDialog(object):
     def setupUi(self, SimulationsDialog):
         SimulationsDialog.setObjectName("SimulationsDialog")
-        SimulationsDialog.resize(482, 346)
+        SimulationsDialog.resize(692, 494)
         self.label_2 = QtWidgets.QLabel(SimulationsDialog)
         self.label_2.setGeometry(QtCore.QRect(90, 40, 131, 21))
         self.label_2.setObjectName("label_2")
@@ -22,7 +22,7 @@ class Ui_SimulationsDialog(object):
         self.label_3.setGeometry(QtCore.QRect(90, 100, 131, 21))
         self.label_3.setObjectName("label_3")
         self.run_simulations_button = QtWidgets.QPushButton(SimulationsDialog)
-        self.run_simulations_button.setGeometry(QtCore.QRect(160, 250, 121, 31))
+        self.run_simulations_button.setGeometry(QtCore.QRect(70, 250, 121, 31))
         self.run_simulations_button.setObjectName("run_simulations_button")
         self.num_of_parties_textbox = QtWidgets.QPlainTextEdit(SimulationsDialog)
         self.num_of_parties_textbox.setGeometry(QtCore.QRect(230, 40, 104, 31))
@@ -44,8 +44,20 @@ class Ui_SimulationsDialog(object):
         self.buttonBox.setGeometry(QtCore.QRect(310, 310, 156, 23))
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
+        self.progress_bar = QtWidgets.QProgressBar(SimulationsDialog)
+        self.progress_bar.setGeometry(QtCore.QRect(220, 250, 241, 31))
+        self.progress_bar.setProperty("value", 24)
+        self.progress_bar.setObjectName("progress_bar")
+        self.verticalLayoutWidget = QtWidgets.QWidget(SimulationsDialog)
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(70, 350, 441, 101))
+        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
+        self.vert_layout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.vert_layout.setContentsMargins(0, 0, 0, 0)
+        self.vert_layout.setObjectName("vert_layout")
 
         self.retranslateUi(SimulationsDialog)
+        self.buttonBox.accepted.connect(SimulationsDialog.accept)
+        self.buttonBox.rejected.connect(SimulationsDialog.reject)
         QtCore.QMetaObject.connectSlotsByName(SimulationsDialog)
 
     def retranslateUi(self, SimulationsDialog):

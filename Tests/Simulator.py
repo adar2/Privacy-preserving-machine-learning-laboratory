@@ -21,16 +21,16 @@ def generate_experiment_name():
 
 class ExperimentSimulator:
     def __init__(self, file_name="", number_of_parties=5, simulations_to_run=100):
-        self.file_name = ''
         self.number_of_parties = number_of_parties
+        self.file_name = file_name
         self.simulations_to_run = simulations_to_run
-        self.data = pd.read_csv(file_name)
         self.public_key = None
         self.private_key = None
         self.D = None
         self.U = None
 
     def run_simulations(self):
+        self.data = pd.read_csv(self.file_name)
         self.public_key, self.private_key = paillier.generate_paillier_keypair(n_length=KEY_SIZE)
         logrank_test = LogRankTest(self.data)
         logrank_test_result = logrank_test.test()
