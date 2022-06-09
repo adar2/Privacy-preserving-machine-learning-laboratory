@@ -97,8 +97,10 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
         self.run_simulations_button.clicked.connect(self.run_simulations)
         self.generate_dataset_checkbox.stateChanged.connect(self.on_generate_checkbox_toggled)
         self.figure = Figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.vert_layout.addWidget(self.canvas)
+        self.left_canvas = FigureCanvas(self.figure)
+        self.right_canvas = FigureCanvas(self.figure)
+        self.form_layout.addWidget(self.left_canvas)
+        self.form_layout.addWidget(self.right_canvas)
 
     def should_generate_data(self):
         return self.generate_dataset_checkbox.isChecked()
@@ -110,8 +112,8 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
             self.browse_button.setEnabled(True)
 
     def run_simulations(self):
-        num_of_parties = int(self.num_of_parties_textbox.toPlainText())
-        num_of_runs = int(self.num_of_runs_textbox.toPlainText())
+        num_of_parties = int(self.num_of_parties_textbox.text())
+        num_of_runs = int(self.num_of_runs_textbox.text())
         simulator = ExperimentSimulator(number_of_parties=num_of_parties, simulations_to_run=num_of_runs)
         # use local file
         if self.should_generate_data():
@@ -121,8 +123,8 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
             simulator.file_name = self.file_full_path
         z_fig = LogrankTest.run_logrank_test(simulator.file_name)
         z_star_fig = simulator.run_simulations()
-        self.draw_figure_on_canvas(z_fig)
-        self.draw_figure_on_canvas(z_star_fig)
+        self.draw_figure_on_canvas(z_fig, self.left_canvas)
+        self.draw_figure_on_canvas(z_star_fig, self.right_canvas)
 
     def generate_data_file(self):
         from Datasets.DataGenerator import DataGenerator
@@ -131,10 +133,9 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
         generator.generate_data(generated_file_name)
         return generated_file_name
 
-    def draw_figure_on_canvas(self, figure):
-        # self.figure.clear()
-        self.figure = figure
-        self.canvas.draw()
+    def draw_figure_on_canvas(self, figure, canvas):
+        canvas.figure = figure
+        canvas.draw()
 
 
 class ResultsViewDialog(QDialog, Ui_ResultsViewDialog):
