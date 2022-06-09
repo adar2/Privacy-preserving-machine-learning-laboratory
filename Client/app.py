@@ -89,6 +89,7 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
         super().__init__(parent)
         self.setupUi(self)
         self.connect_browse_button(self.browse_button)
+        self.browse_button.setEnabled(False)
         self.run_simulations_button.clicked.connect(self.run_simulations)
         self.generate_dataset_checkbox.stateChanged.connect(self.on_generate_checkbox_toggled)
 
@@ -97,9 +98,9 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
 
     def on_generate_checkbox_toggled(self, state):
         if state == QtCore.Qt.Checked:
-            self.browse_button.setDisabled()
+            self.browse_button.setEnabled(False)
         else:
-            self.browse_button.setEnabled()
+            self.browse_button.setEnabled(True)
 
     def run_simulations(self):
         num_of_parties = int(self.num_of_parties_textbox.toPlainText())

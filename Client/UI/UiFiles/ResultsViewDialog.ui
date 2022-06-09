@@ -32,7 +32,7 @@
   <widget class="QTextEdit" name="guid_textbox">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>200</x>
      <y>60</y>
      <width>104</width>
      <height>64</height>
@@ -45,7 +45,7 @@
      <x>50</x>
      <y>80</y>
      <width>111</width>
-     <height>16</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
