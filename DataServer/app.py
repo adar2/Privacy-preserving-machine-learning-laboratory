@@ -35,7 +35,9 @@ def get_results():
             data = request.json
             uid = data['uid']
             decrypted_data = get_decrypted_data(uid)
-            return {'D': decrypted_data[0], 'U': decrypted_data[1]}
+            name = get_experiment_name(uid)
+            creation_date = get_experiment_creation_date(uid)
+            return {'name': name, 'creation_date': creation_date, 'D': decrypted_data[0], 'U': decrypted_data[1]}
         except Exception as e:
             print(e)
     return abort(DEFAULT_FAILURE_STATUS_CODE)
