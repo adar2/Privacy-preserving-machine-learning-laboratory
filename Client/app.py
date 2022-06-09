@@ -1,6 +1,4 @@
 import sys
-import typing
-
 from PyQt5 import QtCore
 from LogrankTest import LogrankTest
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QWidget
@@ -10,11 +8,12 @@ from Client.UI.PyFiles.UploadDataDialog import Ui_UploadDataDialog
 from Client.UI.PyFiles.NewExperimentDialog import Ui_NewExperimentDialog
 from Client.UI.PyFiles.SimulationsDialog import Ui_SimulationsDialog
 from Client.UI.PyFiles.ResultsViewDialog import Ui_ResultsViewDialog
-from Client.UI.PyFiles.LocalAnalysisDialog import Ui_LocalAnalysisDialog
 from ASY import run_ASY_protocol
 from Client.DataServerClient import DataServerClient
 from Client.Infrastructure.Common import FAILURE
 from Tests.Simulator import ExperimentSimulator
+from Infrastructure.Common import SUCCESS, FAILURE
+from math import sqrt
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -126,10 +125,15 @@ class ResultsViewDialog(QDialog,Ui_ResultsViewDialog):
         if self.guid_textbox_is_empty():
             error_popup("No Guid Entered", "Guid field can't be empty!")
         guid = self.guid_textbox.toPlainText()
-        results = self.data_server_client.get_results(guid) # TODO: needs to be more than number, maybe get_exp_details?
-        info_popup("Experiment Results",f'Experiment Results: {results}')
-
-
+        status, results_json = self.data_server_client.get_results(guid)
+        if status is FAILURE:
+            error_popup("Connection Error", "Failed connecting to server!")
+        name = results_json['name']
+        date = results_json['creation_date']
+        u = results_json['U']
+        d = results_json['D']
+        z_star = d / sqrt(u)
+        info_popup("Experiment Results",f'Experiment Name: {name}\nCreated on: {date}\n Current Z*: {z_star}')
 
 
 if __name__ == "__main__":
