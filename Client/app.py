@@ -1,23 +1,22 @@
 import sys
-from PyQt5 import QtCore
-from matplotlib import pyplot as plt
+from math import sqrt
 
-from LogrankTest import LogrankTest
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QWidget
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+
+from Client.ASY import run_ASY_protocol
+from Client.DataServerClient import DataServerClient
 from Client.Infrastructure.GuiUtils import error_popup, info_popup, copy_to_clipboard, DialogWithBrowse
 from Client.UI.PyFiles.MainWindow import Ui_MainWindow
-from Client.UI.PyFiles.UploadDataDialog import Ui_UploadDataDialog
 from Client.UI.PyFiles.NewExperimentDialog import Ui_NewExperimentDialog
-from Client.UI.PyFiles.SimulationsDialog import Ui_SimulationsDialog
 from Client.UI.PyFiles.ResultsViewDialog import Ui_ResultsViewDialog
-from ASY import run_ASY_protocol
-from Client.DataServerClient import DataServerClient
+from Client.UI.PyFiles.SimulationsDialog import Ui_SimulationsDialog
+from Client.UI.PyFiles.UploadDataDialog import Ui_UploadDataDialog
+from Client.Infrastructure.Common import FAILURE
+from LogrankTest import LogrankTest
 from Tests.Simulator import ExperimentSimulator
-from Infrastructure.Common import SUCCESS, FAILURE
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from math import sqrt
-from datetime import datetime
-from matplotlib.figure import Figure
 
 
 class Window(QMainWindow, Ui_MainWindow):

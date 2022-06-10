@@ -1,10 +1,11 @@
+import os.path
 import secrets
 
 from flask import Flask, request, abort
 
 from Common.Utils import deserialize
-from EncryptionModule import decrypt, encrypt
-from Models.Models import *
+from SecurityServer.EncryptionModule import decrypt, encrypt
+from SecurityServer.Models.Models import *
 from Common.Constants import DEFAULT_FAILURE_STATUS_CODE, SECURITY_SERVER_DB_CS
 
 app = Flask(__name__)
@@ -88,4 +89,21 @@ def data_decryption():
 
 
 if __name__ == "__main__":
-    app.run(port=5051, debug=True, ssl_context='adhoc')
+    from configparser import ConfigParser
+
+    config_file = 'config.ini'
+    config = ConfigParser()
+    config.read(config_file)
+    if not os.path.exists(config_file):
+        config.add_section('main')
+        config.set('main', 'port', '5051')
+        config.set('main', 'debug', 'True')
+        config.set('main', 'ssl_context', 'adhoc')
+        with open('config.ini', 'w') as f:
+            config.write(f)
+
+    port = int(config.get('main', 'port'))
+    debug = bool(config.get('main', 'debug'))
+    ssl_context = config.get('main', 'ssl_context')
+
+    app.run(port=port, debug=debug, ssl_context=ssl_context)
