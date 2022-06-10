@@ -101,6 +101,8 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
         self.right_canvas = FigureCanvas(self.figure)
         self.form_layout.addWidget(self.left_canvas)
         self.form_layout.addWidget(self.right_canvas)
+        self.simulator = ExperimentSimulator()
+        self.simulator.figure_signal.inner.connect(self.draw)
 
     def should_generate_data(self):
         return self.generate_dataset_checkbox.isChecked()
@@ -114,17 +116,17 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
     def run_simulations(self):
         num_of_parties = int(self.num_of_parties_textbox.text())
         num_of_runs = int(self.num_of_runs_textbox.text())
-        simulator = ExperimentSimulator(number_of_parties=num_of_parties, simulations_to_run=num_of_runs)
+        self.simulator.number_of_parties = num_of_parties
+        self.simulator.simulations_to_run = num_of_runs
         # use local file
         if self.should_generate_data():
             generated_file_name = self.generate_data_file()
-            simulator.file_name = generated_file_name
+            self.simulator.file_name = generated_file_name
         else:
-            simulator.file_name = self.file_full_path
-        z_fig = LogrankTest.run_logrank_test(simulator.file_name)
-        z_star_fig = simulator.run_simulations()
+            self.simulator.file_name = self.file_full_path
+        z_fig = LogrankTest.run_logrank_test(self.simulator.file_name)
+        self.simulator.start()
         self.draw_figure_on_canvas(z_fig, self.left_canvas)
-        self.draw_figure_on_canvas(z_star_fig, self.right_canvas)
 
     def generate_data_file(self):
         from Datasets.DataGenerator import DataGenerator
@@ -136,6 +138,10 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
     def draw_figure_on_canvas(self, figure, canvas):
         canvas.figure = figure
         canvas.draw()
+
+    def draw(self, object):
+        self.right_canvas.figure = object
+        self.right_canvas.draw()
 
 
 class ResultsViewDialog(QDialog, Ui_ResultsViewDialog):

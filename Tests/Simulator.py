@@ -5,6 +5,7 @@ from threading import Thread
 
 import numpy as np
 import pandas as pd
+from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from matplotlib import pyplot as plt
 from phe import paillier
 
@@ -19,15 +20,25 @@ def generate_experiment_name():
     return ''.join(np.random.choice(list(string.ascii_uppercase + string.digits)) for _ in range(NAME_LENGTH))
 
 
-class ExperimentSimulator:
+class Signal(QObject):
+    inner = pyqtSignal(object)
+
+
+class ExperimentSimulator(QThread):
     def __init__(self, file_name="", number_of_parties=5, simulations_to_run=100):
+        super(ExperimentSimulator, self).__init__()
         self.number_of_parties = number_of_parties
         self.file_name = file_name
         self.simulations_to_run = simulations_to_run
+        self.data = None
         self.public_key = None
         self.private_key = None
         self.D = None
         self.U = None
+        self.figure_signal = Signal()
+
+    def run(self):
+        self.figure_signal.inner.emit(self.run_simulations())
 
     def run_simulations(self):
         self.data = pd.read_csv(self.file_name)
