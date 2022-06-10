@@ -102,7 +102,8 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
         self.form_layout.addWidget(self.left_canvas)
         self.form_layout.addWidget(self.right_canvas)
         self.simulator = ExperimentSimulator()
-        self.simulator.figure_signal.inner.connect(self.draw)
+        self.simulator.figure_signal.inner.connect(self.draw_figure_by_signal)
+        self.simulator.progress_signal.inner.connect(self.update_progress_bar)
 
     def should_generate_data(self):
         return self.generate_dataset_checkbox.isChecked()
@@ -139,7 +140,10 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
         canvas.figure = figure
         canvas.draw()
 
-    def draw(self, object):
+    def update_progress_bar(self, percent):
+        self.progress_bar.setValue(percent)
+
+    def draw_figure_by_signal(self, object):
         self.right_canvas.figure = object
         self.right_canvas.draw()
 

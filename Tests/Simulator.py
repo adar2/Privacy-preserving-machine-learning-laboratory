@@ -36,6 +36,7 @@ class ExperimentSimulator(QThread):
         self.D = None
         self.U = None
         self.figure_signal = Signal()
+        self.progress_signal = Signal()
 
     def run(self):
         self.figure_signal.inner.emit(self.run_simulations())
@@ -47,7 +48,11 @@ class ExperimentSimulator(QThread):
         logrank_test_result = logrank_test.test()
         original_z = logrank_test_result[0]
         simulation_results = []
-        for _ in range(self.simulations_to_run):
+        for i in range(self.simulations_to_run + 1):
+            completion_percent = round((i / self.simulations_to_run) * 100)
+            self.progress_signal.inner.emit(completion_percent)
+            if i == self.simulations_to_run:
+                break
             z_star = self.__run_simulation()
             delta = z_star - original_z
             simulation_results.append(delta)
