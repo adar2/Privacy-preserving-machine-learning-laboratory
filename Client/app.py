@@ -1,23 +1,22 @@
 import sys
-from PyQt5 import QtCore
-from matplotlib import pyplot as plt
+from math import sqrt
 
-from LogrankTest import LogrankTest
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QWidget
-from Client.Infrastructure.GuiUtils import error_popup, info_popup, copy_to_clipboard, DialogWithBrowse
-from Client.UI.PyFiles.MainWindow import Ui_MainWindow
-from Client.UI.PyFiles.UploadDataDialog import Ui_UploadDataDialog
-from Client.UI.PyFiles.NewExperimentDialog import Ui_NewExperimentDialog
-from Client.UI.PyFiles.SimulationsDialog import Ui_SimulationsDialog
-from Client.UI.PyFiles.ResultsViewDialog import Ui_ResultsViewDialog
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 from ASY import run_ASY_protocol
 from Client.DataServerClient import DataServerClient
+from Client.Infrastructure.GuiUtils import error_popup, info_popup, copy_to_clipboard, DialogWithBrowse
+from Client.UI.PyFiles.MainWindow import Ui_MainWindow
+from Client.UI.PyFiles.NewExperimentDialog import Ui_NewExperimentDialog
+from Client.UI.PyFiles.ResultsViewDialog import Ui_ResultsViewDialog
+from Client.UI.PyFiles.SimulationsDialog import Ui_SimulationsDialog
+from Client.UI.PyFiles.UploadDataDialog import Ui_UploadDataDialog
+from Infrastructure.Common import FAILURE
+from LogrankTest import LogrankTest
 from Tests.Simulator import ExperimentSimulator
-from Infrastructure.Common import SUCCESS, FAILURE
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from math import sqrt
-from datetime import datetime
-from matplotlib.figure import Figure
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -58,12 +57,15 @@ class NewExperimentDialog(QDialog, Ui_NewExperimentDialog):
         name = self.experiment_name_textbox.toPlainText()
         if len(name) == 0:
             error_popup("Name Error", "No Name Entered!")
-        response, guid = self.data_server_client.new_experiment(name)
-        if not response:
+        try:
+            response, guid = self.data_server_client.new_experiment(name)
+            if not response:
+                error_popup("Connection Error", "Failed to connect to server!")
+            info_popup("Experiment created", "Experiment successfully created!\n\nThe GUID was copied to your clipboard.",
+                       f"Experiment name: {name}\nExperiment GUID: {guid}")
+            copy_to_clipboard(guid)
+        except:
             error_popup("Connection Error", "Failed to connect to server!")
-        info_popup("Experiment created", "Experiment successfully created!\n\nThe GUID was copied to your clipboard.",
-                   f"Experiment name: {name}\nExperiment GUID: {guid}")
-        copy_to_clipboard(guid)
 
 
 class DataUploadDialog(QDialog, Ui_UploadDataDialog, DialogWithBrowse):
@@ -78,14 +80,17 @@ class DataUploadDialog(QDialog, Ui_UploadDataDialog, DialogWithBrowse):
         entered_guid = self.guid_textbox.toPlainText()
         if len(entered_guid) == 0:
             error_popup("GUID Error", "No GUID Entered!")
-        public_key_response, public_key = self.data_server_client.get_public_key_from_uid(entered_guid)
-        if public_key_response == FAILURE:
+        try:
+            public_key_response, public_key = self.data_server_client.get_public_key_from_uid(entered_guid)
+            if public_key_response == FAILURE:
+                error_popup("Connection Error", "Failed to connect to server!")
+            m1, m2 = run_ASY_protocol(self.file_full_path, public_key)
+            results_response = self.data_server_client.submit_results(entered_guid, m1, m2)
+            if results_response == FAILURE:
+                error_popup("Connection Error", "Failed to connect to server!")
+            info_popup("Data upload succeeded", f"Data successfully uploaded to experiment: {entered_guid}")
+        except:
             error_popup("Connection Error", "Failed to connect to server!")
-        m1, m2 = run_ASY_protocol(self.file_full_path, public_key)
-        results_response = self.data_server_client.submit_results(entered_guid, m1, m2)
-        if results_response == FAILURE:
-            error_popup("Connection Error", "Failed to connect to server!")
-        info_popup("Data upload succeeded", f"Data successfully uploaded to experiment: {entered_guid}")
 
 
 class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
@@ -162,15 +167,18 @@ class ResultsViewDialog(QDialog, Ui_ResultsViewDialog):
         if self.guid_textbox_is_empty():
             error_popup("No Guid Entered", "Guid field can't be empty!")
         guid = self.guid_textbox.toPlainText()
-        status, results_json = self.data_server_client.get_results(guid)
-        if status is FAILURE:
+        try:
+            status, results_json = self.data_server_client.get_results(guid)
+            if status is FAILURE:
+                error_popup("Connection Error", "Failed connecting to server!")
+            name = results_json['name']
+            date = results_json['creation_date']
+            u = results_json['U']
+            d = results_json['D']
+            z_star = d / sqrt(u)
+            info_popup("Experiment Results", f'Experiment Name: {name}\nCreated on: {date}\n Current Z*: {z_star}')
+        except:
             error_popup("Connection Error", "Failed connecting to server!")
-        name = results_json['name']
-        date = results_json['creation_date']
-        u = results_json['U']
-        d = results_json['D']
-        z_star = d / sqrt(u)
-        info_popup("Experiment Results", f'Experiment Name: {name}\nCreated on: {date}\n Current Z*: {z_star}')
 
 
 if __name__ == "__main__":

@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from Client.Infrastructure.GuiUtils import set_style
+
 
 class Ui_NewExperimentDialog(object):
     def setupUi(self, NewExperimentDialog):
@@ -27,7 +29,7 @@ class Ui_NewExperimentDialog(object):
         self.experiment_name_textbox = QtWidgets.QTextEdit(NewExperimentDialog)
         self.experiment_name_textbox.setGeometry(QtCore.QRect(190, 100, 104, 41))
         self.experiment_name_textbox.setObjectName("experiment_name_textbox")
-
+        set_style(self)
         self.retranslateUi(NewExperimentDialog)
         self.buttonBox.accepted.connect(NewExperimentDialog.accept)
         self.buttonBox.rejected.connect(NewExperimentDialog.reject)

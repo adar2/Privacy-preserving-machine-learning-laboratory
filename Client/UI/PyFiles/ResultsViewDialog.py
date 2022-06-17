@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from Client.Infrastructure.GuiUtils import set_style
+
 
 class Ui_ResultsViewDialog(object):
     def setupUi(self, ResultsViewDialog):
@@ -29,7 +31,7 @@ class Ui_ResultsViewDialog(object):
         self.check_results_button = QtWidgets.QPushButton(ResultsViewDialog)
         self.check_results_button.setGeometry(QtCore.QRect(130, 150, 141, 23))
         self.check_results_button.setObjectName("check_results_button")
-
+        set_style(self)
         self.retranslateUi(ResultsViewDialog)
         self.buttonBox.accepted.connect(ResultsViewDialog.accept)
         self.buttonBox.rejected.connect(ResultsViewDialog.reject)

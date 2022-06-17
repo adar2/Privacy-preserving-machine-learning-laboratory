@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from Client.Infrastructure.GuiUtils import set_style
+
 
 class Ui_SimulationsDialog(object):
     def setupUi(self, SimulationsDialog):
@@ -53,7 +55,7 @@ class Ui_SimulationsDialog(object):
         self.vert_layout.setObjectName("vert_layout")
         self.form_layout.setLayout(9, QtWidgets.QFormLayout.SpanningRole, self.vert_layout)
         self.verticalLayout.addLayout(self.form_layout)
-
+        set_style(self)
         self.retranslateUi(SimulationsDialog)
         QtCore.QMetaObject.connectSlotsByName(SimulationsDialog)
 
