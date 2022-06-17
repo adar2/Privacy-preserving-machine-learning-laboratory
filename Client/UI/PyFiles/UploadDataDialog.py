@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from Client.Infrastructure.GuiUtils import set_style
+
 
 class Ui_UploadDataDialog(object):
     def setupUi(self, UploadDataDialog):
@@ -43,7 +45,7 @@ class Ui_UploadDataDialog(object):
         self.data_label.raise_()
         self.browse_button.raise_()
         self.guid_textbox.raise_()
-
+        set_style(self)
         self.retranslateUi(UploadDataDialog)
         self.buttonBox.accepted.connect(UploadDataDialog.accept)
         self.buttonBox.rejected.connect(UploadDataDialog.reject)

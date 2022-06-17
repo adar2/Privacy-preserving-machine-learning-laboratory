@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QMessageBox, QApplication, QFileDialog, QDialog
+from qt_material import apply_stylesheet
 
 
 def error_popup(title, text):
@@ -37,3 +38,7 @@ class DialogWithBrowse():
 
     def connect_browse_button(self, browse_button):
         browse_button.clicked.connect(self.browse_file)
+
+
+def set_style(element):
+    apply_stylesheet(element, theme='dark_teal.xml')
