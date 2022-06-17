@@ -5,14 +5,13 @@ from threading import Thread
 
 import numpy as np
 import pandas as pd
+from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from matplotlib import pyplot as plt
+from phe import paillier
 
 from Client.ASY import run_ASY_protocol
-from Client.DataServerClient import DataServerClient
+from Common.Constants import KEY_SIZE
 from LogrankTest.LogrankTest import LogRankTest
-import urllib3
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 NAME_LENGTH = 10
 
@@ -21,40 +20,56 @@ def generate_experiment_name():
     return ''.join(np.random.choice(list(string.ascii_uppercase + string.digits)) for _ in range(NAME_LENGTH))
 
 
-def run_client(client, file_path, public_key, uid):
-    m1, m2 = run_ASY_protocol(file_path, public_key)
-    client.submit_results(uid, m1, m2)
+class Signal(QObject):
+    inner = pyqtSignal(object)
 
 
-class ExperimentSimulator:
-    def __init__(self, file_name, number_of_parties=5, simulations_to_run=100,
-                 data_server_url='https://127.0.0.1:5000'):
-        self.file_name = ''
+class ExperimentSimulator(QThread):
+    def __init__(self, file_name="", number_of_parties=5, simulations_to_run=100):
+        super(ExperimentSimulator, self).__init__()
         self.number_of_parties = number_of_parties
+        self.file_name = file_name
         self.simulations_to_run = simulations_to_run
-        self.data = pd.read_csv(file_name)
-        self.data_server_url = data_server_url
+        self.data = None
+        self.public_key = None
+        self.private_key = None
+        self.D = None
+        self.U = None
+        self.figure_signal = Signal()
+        self.progress_signal = Signal()
+
+    def run(self):
+        self.figure_signal.inner.emit(self.run_simulations())
 
     def run_simulations(self):
+        self.data = pd.read_csv(self.file_name)
+        self.public_key, self.private_key = paillier.generate_paillier_keypair(n_length=KEY_SIZE)
         logrank_test = LogRankTest(self.data)
         logrank_test_result = logrank_test.test()
         original_z = logrank_test_result[0]
         simulation_results = []
-        for _ in range(self.simulations_to_run):
+        for i in range(self.simulations_to_run + 1):
+            completion_percent = round((i / self.simulations_to_run) * 100)
+            self.progress_signal.inner.emit(completion_percent)
+            if i == self.simulations_to_run:
+                break
             z_star = self.__run_simulation()
             delta = z_star - original_z
-            print(f'z* = {z_star}, z = {original_z}')
-            print(f'difference between actual Z to Z*:{delta}')
             simulation_results.append(delta)
+        fig = plt.figure()
         plt.hist(simulation_results, alpha=0.5)
         plt.title(f'z* - z: data size={len(self.data)}, {self.number_of_parties} parties , original z={original_z}')
         plt.xlabel('z* - z')
         plt.ylabel('count')
-        plt.show()
+        return fig
 
-    def __get_clients_and_files(self):
+    def __run_client(self, file_path, public_key):
+        m1, m2 = run_ASY_protocol(file_path, public_key)
+        self.D += m1
+        self.U += m2
+
+    def __get_client_files(self):
         client_files = []
-        clients = []
         shuffled = self.data.sample(frac=1)
         splitted_data = np.array_split(shuffled, self.number_of_parties)
         for i in range(self.number_of_parties):
@@ -62,27 +77,22 @@ class ExperimentSimulator:
             client_file = splitted_data[i]
             client_file.to_csv(client_file_name, index=False)
             client_files.append(client_file_name)
-            clients.append(DataServerClient(self.data_server_url))
-        return client_files, clients
+        return client_files
 
     def __run_simulation(self):
-        client_files, clients = self.__get_clients_and_files()
+        self.D = self.public_key.encrypt(0)
+        self.U = self.public_key.encrypt(0)
+        client_files = self.__get_client_files()
         try:
             client_threads = []
-            # initialize experiment
-            client = clients[0]
-            status, uid = client.new_experiment(generate_experiment_name())
-            _, public_key = client.get_public_key_from_uid(uid)
-            # make clients act simultaneously
-            for client, file_path in zip(clients, client_files):
-                client_thread = Thread(target=run_client, args=(client, file_path, public_key, uid))
+            for file_path in client_files:
+                client_thread = Thread(target=self.__run_client, args=(file_path, self.public_key))
                 client_thread.start()
                 client_threads.append(client_thread)
             for client_thread in client_threads:
                 client_thread.join()
-            results = client.get_results(uid)[1]
-            D = results['D']
-            U = results['U']
+            D = self.private_key.decrypt(self.D)
+            U = self.private_key.decrypt(self.U)
             z_star = D / sqrt(U)
             return z_star
         except Exception as e:

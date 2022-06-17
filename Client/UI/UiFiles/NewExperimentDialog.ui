@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>NewExperimentDialog</class>
+ <widget class="QDialog" name="NewExperimentDialog">
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Upload Data</string>
+   <string>Create New Experiment</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -32,45 +32,28 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>352</width>
-     <height>223</height>
+     <x>40</x>
+     <y>110</y>
+     <width>151</width>
+     <height>16</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="guid_label">
-      <property name="text">
-       <string>Experiment Guid: </string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QTextEdit" name="guid_textbox"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="data_label">
-      <property name="text">
-       <string>Data:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="browse_button">
-      <property name="text">
-       <string>Browse...</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-   <zorder>guid_label</zorder>
-   <zorder>data_label</zorder>
-   <zorder>browse_button</zorder>
-   <zorder>guid_textbox</zorder>
+   <property name="text">
+    <string>Experiment Name:</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="experiment_name_textbox">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>100</y>
+     <width>104</width>
+     <height>41</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>
@@ -78,7 +61,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>NewExperimentDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -94,7 +77,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>NewExperimentDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -38,6 +38,14 @@ def get_public_key_by_uid(uid):
     return client.get_public_key(uid)
 
 
+def get_experiment_name(uid):
+    return get_experiment_by_id(uid).name
+
+
+def get_experiment_creation_date(uid):
+    return get_experiment_by_id(uid).timestamp
+
+
 def create_experiment(name) -> Experiment:
     new_experiment = Experiment(id=generate_uuid(), name=name)
     public_key = client.create(name, new_experiment.id)

@@ -1,6 +1,6 @@
 import json
 import requests
-import Client.Common as clientCommon
+import Client.Infrastructure.Common as clientCommon
 from Common.Utils import serialize, deserialize
 
 
@@ -42,4 +42,4 @@ class DataServerClient:
         response = requests.get(headers=self.headers, url=url, data=payload, verify=False)
         if response.status_code != 200:
             return clientCommon.FAILURE, None
-        return clientCommon.SUCCESS, response.json()  # returns {'D':value,'U':value}
+        return clientCommon.SUCCESS, response.json()  # returns {'name':name, 'creation_date':date, 'D':value,'U':value}

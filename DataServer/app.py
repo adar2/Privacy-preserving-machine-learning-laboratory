@@ -1,9 +1,10 @@
+import os
 import secrets
 
 from flask import Flask, request, abort, redirect
 
 from Common.Constants import DEFAULT_FAILURE_STATUS_CODE, DATA_SERVER_DB_CS
-from Models.Models import *
+from DataServer.Models.Models import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DATA_SERVER_DB_CS
@@ -35,7 +36,9 @@ def get_results():
             data = request.json
             uid = data['uid']
             decrypted_data = get_decrypted_data(uid)
-            return {'D': decrypted_data[0], 'U': decrypted_data[1]}
+            name = get_experiment_name(uid)
+            creation_date = get_experiment_creation_date(uid)
+            return {'name': name, 'creation_date': creation_date, 'D': decrypted_data[0], 'U': decrypted_data[1]}
         except Exception as e:
             print(e)
     return abort(DEFAULT_FAILURE_STATUS_CODE)
@@ -73,4 +76,20 @@ def get_public_key():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, ssl_context='adhoc')
+    from configparser import ConfigParser
+
+    config_file = 'config.ini'
+    config = ConfigParser()
+    config.read(config_file)
+    if not os.path.exists(config_file):
+        config.add_section('main')
+        config.set('main', 'port', '8080')
+        config.set('main', 'debug', 'True')
+        config.set('main', 'ssl_context', 'adhoc')
+        with open('config.ini', 'w') as f:
+            config.write(f)
+
+    port = int(config.get('main', 'port'))
+    debug = bool(config.get('main', 'debug'))
+    ssl_context = config.get('main', 'ssl_context')
+    app.run(port=port, debug=debug, ssl_context=ssl_context)

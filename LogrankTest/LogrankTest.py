@@ -1,11 +1,17 @@
 import math
 
 import pandas as pd
+from matplotlib import pyplot as plt
 
 
 class LogRankTest:
-    def __init__(self, data: pd.DataFrame):
-        self.df = data
+    def __init__(self, dataset):
+        if isinstance(dataset, str):
+            self.df = pd.read_csv(dataset)
+        elif isinstance(dataset, pd.DataFrame):
+            self.df = dataset
+        else:
+            raise NotImplementedError
         self.number_of_subjects = len(self.df)
 
     def __get_distinct_time(self):
@@ -34,6 +40,19 @@ class LogRankTest:
         return expected_value * ((num_of_subjects - num_of_failures) / num_of_subjects) * (
                 (num_of_subjects - num_of_subjects_in_group) / (num_of_subjects - 1))
 
+    def get_data_graph(self, title='dataset representation'):
+        fig = plt.figure()
+        times = self.__get_distinct_time()
+        remaining_a = [len(self.df[(self.df.time >= time) & (self.df.group == 1)]) / len(self.df) for time in times]
+        remaining_b = [len(self.df[(self.df.time >= time) & (self.df.group == 2)]) / len(self.df) for time in times]
+        plt.step(times, remaining_a, label="group A", where='pre')
+        plt.step(times, remaining_b, label="group B", where='pre')
+        plt.title(title)
+        plt.xlabel('time')
+        plt.ylabel('remaining percent %')
+        plt.legend()
+        return fig
+
     def test(self):
         O_a = 0
         O_b = 0
@@ -61,3 +80,16 @@ class LogRankTest:
         Z_a = (O_a - E_a) / math.sqrt(V_a)
         Z_b = (O_b - E_b) / math.sqrt(V_b)
         return (Z_a, Z_b)
+
+
+def run_logrank_test(file_path: str):
+    logrank = LogRankTest(file_path)
+    test_results = logrank.test()
+    return logrank.get_data_graph(f"Step function for LogRank test, Z={test_results[0]}")
+
+
+if __name__ == '__main__':
+    l = LogRankTest('../Datasets/test-data2.txt')
+    res = l.test()
+    print(f'group A Z value :{res[0]}, group B Z value:{res[1]}, their sum {res[0] + res[1]}')
+    l.get_data_graph()
