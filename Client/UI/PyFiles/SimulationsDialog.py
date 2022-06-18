@@ -22,18 +22,31 @@ class Ui_SimulationsDialog(object):
         self.form_layout = QtWidgets.QFormLayout()
         self.form_layout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.form_layout.setObjectName("form_layout")
+
         self.label_2 = QtWidgets.QLabel(SimulationsDialog)
         self.label_2.setObjectName("label_2")
         self.form_layout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_2)
+
         self.num_of_parties_textbox = QtWidgets.QLineEdit(SimulationsDialog)
         self.num_of_parties_textbox.setObjectName("num_of_parties_textbox")
         self.form_layout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.num_of_parties_textbox)
+
         self.label_3 = QtWidgets.QLabel(SimulationsDialog)
         self.label_3.setObjectName("label_3")
         self.form_layout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_3)
+
         self.num_of_runs_textbox = QtWidgets.QLineEdit(SimulationsDialog)
         self.num_of_runs_textbox.setObjectName("num_of_runs_textbox")
         self.form_layout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.num_of_runs_textbox)
+
+        self.label_4 = QtWidgets.QLabel(SimulationsDialog)
+        self.label_4.setObjectName("label_4")
+        self.form_layout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_4)
+
+        self.num_of_patients_textbox = QtWidgets.QLineEdit(SimulationsDialog)
+        self.num_of_patients_textbox.setObjectName("num_of_patients_textbox")
+        self.form_layout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.num_of_patients_textbox)
+
         self.generate_dataset_checkbox = QtWidgets.QCheckBox(SimulationsDialog)
         self.generate_dataset_checkbox.setChecked(True)
         self.generate_dataset_checkbox.setObjectName("generate_dataset_checkbox")
@@ -64,6 +77,7 @@ class Ui_SimulationsDialog(object):
         SimulationsDialog.setWindowTitle(_translate("SimulationsDialog", "Simulations"))
         self.label_2.setText(_translate("SimulationsDialog", "Number Of Parties:"))
         self.label_3.setText(_translate("SimulationsDialog", "Number Of Runs:"))
+        self.label_4.setText(_translate("SimulationsDialog", "Number Of Patients:"))
         self.generate_dataset_checkbox.setText(_translate("SimulationsDialog", "Generate Synthetic Dataset"))
         self.label.setText(_translate("SimulationsDialog", "Dataset:"))
         self.browse_button.setText(_translate("SimulationsDialog", "Browse..."))

@@ -116,28 +116,40 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
     def on_generate_checkbox_toggled(self, state):
         if state == QtCore.Qt.Checked:
             self.browse_button.setEnabled(False)
+            self.num_of_patients_textbox.setEnabled(True)
         else:
             self.browse_button.setEnabled(True)
+            self.num_of_patients_textbox.setEnabled(False)
 
     def run_simulations(self):
-        num_of_parties = int(self.num_of_parties_textbox.text())
-        num_of_runs = int(self.num_of_runs_textbox.text())
-        self.simulator.number_of_parties = num_of_parties
-        self.simulator.simulations_to_run = num_of_runs
-        # use local file
-        if self.should_generate_data():
-            generated_file_name = self.generate_data_file()
-            self.simulator.file_name = generated_file_name
-        else:
-            self.simulator.file_name = self.file_full_path
-        z_fig = LogrankTest.run_logrank_test(self.simulator.file_name)
-        self.simulator.start()
-        self.draw_figure_on_canvas(z_fig, self.left_canvas)
+        num_of_patients = None
+        try:
+            num_of_parties = int(self.num_of_parties_textbox.text())
+            num_of_runs = int(self.num_of_runs_textbox.text())
+            if self.should_generate_data():
+                num_of_patients = int(self.num_of_patients_textbox.text())
 
-    def generate_data_file(self):
+        except:
+            error_popup("Illegal Fields", "All fields must be filled with valid integers!")
+        else:
+            self.simulator.number_of_parties = num_of_parties
+            self.simulator.simulations_to_run = num_of_runs
+            # use local file
+            if self.should_generate_data():
+                generated_file_name = self.generate_data_file(num_of_patients)
+                self.simulator.file_name = generated_file_name
+            else:
+                self.simulator.file_name = self.file_full_path
+            z_fig = LogrankTest.run_logrank_test(self.simulator.file_name)
+            self.simulator.start()
+            self.draw_figure_on_canvas(z_fig, self.left_canvas)
+
+    def generate_data_file(self, num_of_patients):
         from Datasets.DataGenerator import DataGenerator
         generated_file_name = f'GeneratedData.txt'
         generator = DataGenerator()
+        if num_of_patients is not None:
+            generator.number_of_patients = num_of_patients
         generator.generate_data(generated_file_name)
         return generated_file_name
 
