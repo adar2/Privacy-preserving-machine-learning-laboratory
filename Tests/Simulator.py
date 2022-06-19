@@ -41,6 +41,11 @@ class ExperimentSimulator(QThread):
     def run(self):
         self.figure_signal.inner.emit(self.run_simulations())
 
+    def run_local_simulations(self):
+        self.data = pd.read_csv(self.file_name)
+        self.public_key, self.private_key = paillier.generate_paillier_keypair(n_length=KEY_SIZE)
+        z_star = self.__run_simulation()
+
     def run_simulations(self):
         self.data = pd.read_csv(self.file_name)
         self.public_key, self.private_key = paillier.generate_paillier_keypair(n_length=KEY_SIZE)
