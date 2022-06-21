@@ -51,6 +51,7 @@ class DataUploadDialog(QDialog, Ui_UploadDataDialog, DialogWithBrowse):
         entered_guid = self.guid_textbox.toPlainText()
         if len(entered_guid) == 0:
             error_popup("GUID Error", "No GUID Entered!")
+            return
         try:
             public_key_response, public_key = self.data_server_client.get_public_key_from_uid(entered_guid)
             m1 = None
@@ -61,6 +62,7 @@ class DataUploadDialog(QDialog, Ui_UploadDataDialog, DialogWithBrowse):
                 m1, m2 = run_ASY_protocol(self.file_full_path, public_key)
             except:
                 error_popup("Format Error", "Data is corrupted or in unsupported foramt!")
+                return
             results_response = self.data_server_client.submit_results(entered_guid, m1, m2)
             if results_response == FAILURE:
                 error_popup("Connection Error", "Failed to submit results!")
@@ -108,6 +110,7 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
 
         except:
             error_popup("Illegal Fields", "All fields must be filled with valid integers!")
+            return
         else:
             self.simulator.number_of_parties = num_of_parties
             self.simulator.simulations_to_run = num_of_runs
@@ -122,7 +125,8 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
                 self.simulator.start()
                 self.draw_figure_on_canvas(z_fig, self.left_canvas)
             except:
-                error_popup("Simulation Error", "Failed to run simulations - Data is corrupted or in unsupported foramt!")
+                error_popup("Simulation Error", "Failed to run simulations - Data is corrupted or in unsupported format!")
+                return
 
     def generate_data_file(self, num_of_patients):
         from Datasets.DataGenerator import DataGenerator
@@ -163,6 +167,7 @@ class ResultsViewDialog(QDialog, Ui_ResultsViewDialog):
             status, results_json = self.data_server_client.get_results(guid)
             if status is FAILURE:
                 error_popup("Error", "Failed fetching results!")
+                return
             name = results_json['name']
             date = results_json['creation_date']
             u = results_json['U']
