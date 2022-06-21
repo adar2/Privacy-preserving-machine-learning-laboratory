@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QInputDialog
 
 from Client.DataServerClient import DataServerClient
 from Client.FunctionalDialogs import NewExperimentDialog, DataUploadDialog, SimulationsDialog, ResultsViewDialog
@@ -16,6 +16,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.simulations_button.clicked.connect(self.on_simulations_click)
         self.view_results_button.clicked.connect(self.on_view_results_click)
         self.data_server_client = DataServerClient()
+        self.actionServer_URL.triggered.connect(self.on_config_url)
+
+    def on_config_url(self):
+        text, ok = QInputDialog.getText(self, 'configuration', 'Enter Server URL:')
+        if ok:
+            self.data_server_client.url = text
 
     def on_upload_data_click(self):
         dialog = DataUploadDialog(self.data_server_client)

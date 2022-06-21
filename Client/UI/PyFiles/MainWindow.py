@@ -81,6 +81,18 @@ class Ui_MainWindow(object):
         self.centralwidget.setLayout(self.main_grid)
         MainWindow.setCentralWidget(self.centralwidget)
 
+        self.menuBar = QtWidgets.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 696, 22))
+        self.menuBar.setObjectName("menuBar")
+        self.menuConfiguration = QtWidgets.QMenu(self.menuBar)
+        self.menuConfiguration.setObjectName("menuConfiguration")
+        MainWindow.setMenuBar(self.menuBar)
+        self.actionServer_URL = QtWidgets.QAction(MainWindow)
+        self.actionServer_URL.setObjectName("actionServer_URL")
+        self.actionServer_URL.setShortcut("Ctrl+U")
+        self.menuConfiguration.addAction(self.actionServer_URL)
+        self.menuBar.addAction(self.menuConfiguration.menuAction())
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -92,6 +104,8 @@ class Ui_MainWindow(object):
         self.create_experiment_button.setText(_translate("MainWindow", "Create new experiment"))
         self.view_results_button.setText(_translate("MainWindow", "View Results"))
         self.simulations_button.setText(_translate("MainWindow", "Simulations"))
+        self.menuConfiguration.setTitle(_translate("MainWindow", "Configuration"))
+        self.actionServer_URL.setText(_translate("MainWindow", "Server URL"))
 
 
 if __name__ == "__main__":
