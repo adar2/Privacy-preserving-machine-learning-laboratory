@@ -113,8 +113,6 @@ if __name__ == "__main__":
     window = QtWidgets.QMainWindow()
     MyWindow = Ui_MainWindow()
     set_style(app)
-    # setup stylesheet
-
     MyWindow.setupUi(window)
     MyWindow.retranslateUi(window)
     window.show()

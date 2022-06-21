@@ -53,12 +53,17 @@ class DataUploadDialog(QDialog, Ui_UploadDataDialog, DialogWithBrowse):
             error_popup("GUID Error", "No GUID Entered!")
         try:
             public_key_response, public_key = self.data_server_client.get_public_key_from_uid(entered_guid)
+            m1 = None
+            m2 = None
             if public_key_response == FAILURE:
-                error_popup("Connection Error", "Failed to connect to server!")
-            m1, m2 = run_ASY_protocol(self.file_full_path, public_key)
+                error_popup("Error", "Failed to submit results!")
+            try:
+                m1, m2 = run_ASY_protocol(self.file_full_path, public_key)
+            except:
+                error_popup("Format Error", "Data is corrupted or in unsupported foramt!")
             results_response = self.data_server_client.submit_results(entered_guid, m1, m2)
             if results_response == FAILURE:
-                error_popup("Connection Error", "Failed to connect to server!")
+                error_popup("Connection Error", "Failed to submit results!")
             info_popup("Data upload succeeded", f"Data successfully uploaded to experiment: {entered_guid}")
         except:
             error_popup("Connection Error", "Failed to connect to server!")
@@ -111,9 +116,12 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
                 self.simulator.file_name = generated_file_name
             else:
                 self.simulator.file_name = self.file_full_path
-            z_fig = LogrankTest.run_logrank_test(self.simulator.file_name)
-            self.simulator.start()
-            self.draw_figure_on_canvas(z_fig, self.left_canvas)
+            try:
+                z_fig = LogrankTest.run_logrank_test(self.simulator.file_name)
+                self.simulator.start()
+                self.draw_figure_on_canvas(z_fig, self.left_canvas)
+            except:
+                error_popup("Simulation Error", "Failed to run simulations - Data is corrupted or in unsupported foramt!")
 
     def generate_data_file(self, num_of_patients):
         from Datasets.DataGenerator import DataGenerator
@@ -153,7 +161,7 @@ class ResultsViewDialog(QDialog, Ui_ResultsViewDialog):
         try:
             status, results_json = self.data_server_client.get_results(guid)
             if status is FAILURE:
-                error_popup("Connection Error", "Failed connecting to server!")
+                error_popup("Error", "Failed fetching results!")
             name = results_json['name']
             date = results_json['creation_date']
             u = results_json['U']
