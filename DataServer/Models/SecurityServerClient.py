@@ -4,7 +4,7 @@ import requests
 
 
 class SecurityServerClient:
-    def __init__(self, url='https://127.0.0.1:5051'):
+    def __init__(self, url):
         self.url = url
         self.headers = {'Content-Type': 'application/json'}
         self.paths = {'create': '/create', 'public_key': '/publicKey', 'encrypt': '/encrypt', 'decrypt': '/decrypt'}

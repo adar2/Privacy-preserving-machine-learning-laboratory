@@ -10,6 +10,7 @@ from Common.Constants import DEFAULT_FAILURE_STATUS_CODE, SECURITY_SERVER_DB_CS
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SECURITY_SERVER_DB_CS
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = secrets.token_bytes(32)
 db.app = app
 db.init_app(app)
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     if not os.path.exists(config_file):
         config.add_section('main')
         config.set('main', 'port', '5051')
-        config.set('main', 'debug', 'True')
+        config.set('main', 'debug', 'False')
         config.set('main', 'ssl_context', 'adhoc')
         with open('config.ini', 'w') as f:
             config.write(f)

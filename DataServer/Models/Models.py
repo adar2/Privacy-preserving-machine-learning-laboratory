@@ -6,7 +6,7 @@ from Common.Utils import generate_uuid, deserialize, serialize
 from DataServer.Models.SecurityServerClient import SecurityServerClient
 
 db = SQLAlchemy()
-client = SecurityServerClient()
+client = None
 
 
 class Experiment(db.Model):
@@ -80,3 +80,8 @@ def update_experiment_results(uid, m1, m2) -> None:
     experiment.D_cumulative_sum = serialize(D)
     experiment.U_cumulative_sum = serialize(U)
     db.session.commit()
+
+
+def init_security_client(url):
+    global client
+    client = SecurityServerClient(url)

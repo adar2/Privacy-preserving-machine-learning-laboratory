@@ -1,13 +1,14 @@
 import os
 import secrets
 
-from flask import Flask, request, abort, redirect
+from flask import Flask, request, abort
 
 from Common.Constants import DEFAULT_FAILURE_STATUS_CODE, DATA_SERVER_DB_CS
 from DataServer.Models.Models import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DATA_SERVER_DB_CS
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = secrets.token_bytes(32)
 db.app = app
 db.init_app(app)
@@ -84,12 +85,16 @@ if __name__ == "__main__":
     if not os.path.exists(config_file):
         config.add_section('main')
         config.set('main', 'port', '8080')
-        config.set('main', 'debug', 'True')
+        config.set('main', 'debug', 'False')
         config.set('main', 'ssl_context', 'adhoc')
+        config.set('main', 'security_server_url', 'https://127.0.0.1:5051')
         with open('config.ini', 'w') as f:
             config.write(f)
 
     port = int(config.get('main', 'port'))
     debug = bool(config.get('main', 'debug'))
     ssl_context = config.get('main', 'ssl_context')
+    url = config.get('main', 'security_server_url')
+
+    init_security_client(url)
     app.run(port=port, debug=debug, ssl_context=ssl_context)

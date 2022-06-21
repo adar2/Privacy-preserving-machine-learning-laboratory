@@ -2,10 +2,12 @@ import json
 import requests
 import Client.Infrastructure.Common as clientCommon
 from Common.Utils import serialize, deserialize
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class DataServerClient:
-    def __init__(self, url='https://127.0.0.1:5000'):
+    def __init__(self, url='https://127.0.0.1:8080'):
         self.url = url
         self.headers = {'Content-Type': 'application/json'}
         self.paths = {'create': '/create', 'submit_results': '/submitResults', 'get_results': '/getResults',
