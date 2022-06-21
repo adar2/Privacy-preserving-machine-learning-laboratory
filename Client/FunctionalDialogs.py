@@ -98,6 +98,7 @@ class SimulationsDialog(QDialog, Ui_SimulationsDialog, DialogWithBrowse):
             self.num_of_patients_textbox.setEnabled(False)
 
     def run_simulations(self):
+        self.progress_bar.setValue(0)
         num_of_patients = None
         try:
             num_of_parties = int(self.num_of_parties_textbox.text())

@@ -19,7 +19,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionServer_URL.triggered.connect(self.on_config_url)
 
     def on_config_url(self):
-        text, ok = QInputDialog.getText(self, 'configuration', 'Enter Server URL:')
+        text, ok = QInputDialog.getText(self, 'configuration', 'Enter Server URL:', text=self.data_server_client.url)
         if ok:
             self.data_server_client.url = text
 
